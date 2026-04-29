@@ -1,3 +1,38 @@
+# 给你一个“最适合你的用法总结”
+
+你现在最应该做👇
+
+每次写完笔记：
+
+git add .
+git commit -m "更新"
+git push
+## 第一阶段（现在）
+
+- 用 GitHub 做 Obsidian 同步 ✔
+- 开始记录工作经验 ✔
+
+---
+
+## 第二阶段（1个月后）
+
+- 分类整理你的运营知识
+- 建结构（广告/选品/复盘）
+
+---
+
+## 第三阶段（3个月后）
+
+- 变成“个人方法论库”
+- 可复用 + 可变现
+
+---
+
+# 🧠 最关键一句话
+
+👉 GitHub不是工具  
+👉 是你“知识变资产”的容器
+
 把这个本地路径：
 
 C:\Users\Lenovo\Documents\Obsidian Vault
@@ -147,9 +182,9 @@ To https://github.com/xxx/obsidian-notes.git
 
 每次写完笔记：
 
-git add .  
-git commit -m "更新"  
-git push
+**git add .**  
+**git commit -m "更新"**  
+**git push**
 
 ---
 
