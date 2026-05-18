@@ -4,53 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "4af0f3255c337d5d",
+        "id": "472a703c6e1198af",
         "type": "tabs",
         "children": [
           {
-            "id": "596bf58bd2885532",
+            "id": "2153534200b06936",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02_日常复盘.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "02_日常复盘"
-            }
-          },
-          {
-            "id": "eadfc2e6e31cd464",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10-GitHub教程.md",
+                "file": "05-Project AI/10-GitHub教程.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "10-GitHub教程"
             }
-          },
-          {
-            "id": "243aba93fc8c4776",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "05-今日读诗.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "05-今日读诗"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -82,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#广告搜索词本周430-5-6",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -107,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 298.5
   },
   "right": {
     "id": "35d749c2ab5e511a",
@@ -123,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "02_日常复盘.md",
+                "file": "05-Project AI/10-GitHub教程.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "02_日常复盘 的反向链接列表"
+              "title": "10-GitHub教程 的反向链接列表"
             }
           },
           {
@@ -180,26 +151,35 @@
             }
           },
           {
-            "id": "8ac5e23b4d7f7b7a",
+            "id": "5f58be3b30218306",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "c700ee0138fe68b7",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "产品优化.md",
+                "file": "04-NACHILA-下单发货【周更】/00库存补货策略-提示词定.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "产品优化 的大纲"
+              "title": "00库存补货策略-提示词定 的大纲"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -212,40 +192,54 @@
       "bases:新建数据库": false
     }
   },
-  "active": "eadfc2e6e31cd464",
+  "active": "2153534200b06936",
   "lastOpenFiles": [
-    "02_日常复盘.md",
-    "03-播客.md",
-    "1.工作复盘-广告.md",
-    "06-AI系列-更新.md",
-    "Pasted image 20260506133359.png",
-    "00-promt提示词.md",
-    "每日3件小确幸😊.md",
-    "05-今日读诗.md",
-    "未命名 1.md",
-    "04-内耗冥想练习.md",
-    "每日生活问题.md",
-    "每日工作问题.md",
-    "欢迎.md",
-    "12-to do list.md",
-    "B读书笔记-《毛选·生活版》.md",
-    "亚马逊AI提示词.md",
-    "A读诗笔记-《精力管理》.md",
-    "未命名.canvas",
-    "未命名.md",
-    "Pasted image 20260430090829.png",
-    "Pasted image 20260430090820.png",
-    "未命名 1.base",
+    "01-Health【日更】/01-今日读诗.md",
+    "Daily notes/2026-05-18.md",
+    "小红书发布/AI多种玩法提示词.md",
+    "02-Learning学习/碎片学习.md",
+    "05-Project AI/06-AI系列-测试.md",
+    "03-NACHILA-广告搜索词分析【周更】/4.30-5.6广告分析-20%ACOS.md",
+    "Daily notes/2026-05-14.md",
+    "04-NACHILA-下单发货【周更】/01-亚马逊AI提示词.md",
+    "01-Health【日更】/生活问题.md",
+    "01-Health【日更】/感冒应对.md",
+    "01-Health【日更】/04-冥想练习.md",
+    "01-Health【日更】/02_日常复盘.md",
+    "Daily notes/2026-05-15.md",
+    "绩效/订单利润.md",
+    "Pasted image 20260515132830.png",
+    "绩效",
+    "小红书发布/02-读书笔记/尼各马可伦理学》.md",
+    "小红书发布/关于美好生活的乏味真相-小红书.md",
+    "05-Project AI/11-GitHub Copilot.md",
+    "03-NACHILA-广告搜索词分析【周更】/5.7-5.13搜索词分析.md",
+    "03-NACHILA-广告搜索词分析【周更】/广告否词列表.md",
+    "02-Learning学习/爱自己.md",
+    "Templates/Daily notes/每日日记模板.md",
+    "03-NACHILA-广告搜索词分析【周更】/NACHILA品牌解析.md",
+    "03-NACHILA-广告搜索词分析【周更】/搜索词分析报告提示词.md",
+    "宋慧广告诊断报告 1.html",
+    "宋慧广告诊断报告.html",
+    "Daily notes/2026-05-13.md",
+    "02-Learning学习/06-小知识.md",
+    "Pasted image 20260514135615.png",
+    "04-NACHILA-下单发货【周更】/ZZ-已解决的工作问题.md",
+    "Pasted image 20260513165112.png",
+    "未命名 2.base",
+    "67d8b5f54c71bc630d7c5d8690e67c26.png",
+    "5bf167cfdf422c543739f992b0c5b8f7.png",
     "未命名.base",
-    "10-GitHub教程.md",
-    "to do.md",
-    "广告点击率低.md",
-    "2026-04-29.md",
-    "ChatGPT Image 2026年4月29日 14_01_27.png",
-    "Pasted image 20260429134910.png",
-    "Pasted image 20260429091552.png",
-    "Pasted image 20260429091531.png",
-    "Pasted image 20260429091539.png",
-    "亚马逊运营.md"
+    "Pasted image 20260511173009.png",
+    "Pasted image 20260511172939.png",
+    "Pasted image 20260511172105.png",
+    "Pasted image 20260511171956.png",
+    "Pasted image 20260511171916.png",
+    "02-Learning学习",
+    "小红书发布",
+    "03-NACHILA-广告搜索词分析【周更】",
+    "Templates/Daily notes",
+    "Templates/新建文件夹",
+    "未命名.canvas"
   ]
 }
