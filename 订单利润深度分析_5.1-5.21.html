@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>订单利润深度分析 5.1-5.21</title>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#c9d1d9;--muted:#8b949e;--dim:#6e7681;
+  --blue:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;
+  --orange:#e3b341;--purple:#bc8cff;--teal:#39d353;--cyan:#76e3ea;
+  --pink:#f778ba;
+  --font:'PingFang SC','Microsoft YaHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;line-height:1.6}
+.wrap{max-width:1280px;margin:0 auto;padding:36px 20px 80px}
+
+.hdr{padding-bottom:22px;margin-bottom:28px;border-bottom:1px solid var(--border2)}
+.hdr-tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:7px}
+.hdr-title{font-size:25px;font-weight:700;color:#fff;letter-spacing:-.02em}
+.hdr-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* KPI */
+.kpi8{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:22px}
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.kpi .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.kpi .val{font-size:18px;font-weight:700;color:#fff;line-height:1.2}
+.kpi .sub{font-size:10px;margin-top:2px}
+.ok{color:var(--green)}.warn{color:var(--orange)}.bad{color:var(--red)}.info{color:var(--blue)}.purple{color:var(--purple)}
+
+/* Section */
+.sec{display:flex;align-items:center;gap:9px;margin:30px 0 14px;padding:7px 13px;background:var(--bg2);border-left:3px solid var(--blue);border-radius:0 6px 6px 0}
+.sec .n{width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec h2{font-size:13px;font-weight:600;color:#fff}
+.sec small{font-size:11px;color:var(--muted);margin-left:2px}
+
+/* Tables */
+.tw{overflow-x:auto;border-radius:8px;border:1px solid var(--border);margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--bg3);color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:8px 9px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border2)}
+td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.r{text-align:right}.c{text-align:center}
+.mono{font-family:monospace;font-size:11px}
+.nm{color:var(--red);font-weight:600}
+.ng{color:var(--green);font-weight:600}
+.ny{color:var(--orange);font-weight:600}
+.nb{color:var(--blue);font-weight:600}
+
+/* Row highlights */
+.rr td{background:rgba(248,81,73,.06)}
+.rg td{background:rgba(63,185,80,.06)}
+.ry td{background:rgba(210,153,34,.06)}
+.rp td{background:rgba(188,140,255,.06)}
+
+/* Badges */
+.b{display:inline-block;font-size:10px;font-weight:600;padding:1px 7px;border-radius:3px;white-space:nowrap}
+.bg{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3)}
+.br{background:rgba(248,81,73,.15);color:#f85149;border:1px solid rgba(248,81,73,.3)}
+.by{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
+.bb{background:rgba(88,166,255,.15);color:#58a6ff;border:1px solid rgba(88,166,255,.3)}
+.bp{background:rgba(188,140,255,.15);color:#bc8cff;border:1px solid rgba(188,140,255,.3)}
+.bc{background:rgba(118,227,234,.15);color:#76e3ea;border:1px solid rgba(118,227,234,.3)}
+
+/* Alerts */
+.alert{padding:9px 13px;border-radius:6px;font-size:12px;margin-bottom:10px;display:flex;gap:8px;line-height:1.6}
+.ar{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.25);color:#fca5a5}
+.ay{background:rgba(210,153,34,.1);border:1px solid rgba(210,153,34,.25);color:#fcd34d}
+.ag{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.25);color:#86efac}
+.ab{background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);color:#93c5fd}
+
+/* Progress bar */
+.bar{display:inline-flex;align-items:center;gap:5px;width:100%}
+.bt{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;min-width:50px}
+.bf{height:100%;border-radius:3px}
+.bv{font-size:11px;font-weight:600;min-width:40px;text-align:right}
+
+/* 2-col layout */
+.c2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.card h4{font-size:12px;font-weight:600;color:#fff;margin-bottom:10px}
+.card .row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+.card .row:last-child{border-bottom:none}
+
+/* SPU card */
+.spu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.spu-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:14px 16px;position:relative;overflow:hidden}
+.spu-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.spu-card.tier1::before{background:var(--green)}
+.spu-card.tier2::before{background:var(--blue)}
+.spu-card.tier3::before{background:var(--orange)}
+.spu-card.tierX::before{background:var(--red)}
+.spu-card .name{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px}
+.spu-card .code{font-size:10px;color:var(--muted);font-family:monospace;margin-bottom:8px}
+.spu-card .metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.spu-card .m{text-align:center;padding:6px 4px;background:var(--bg3);border-radius:5px}
+.spu-card .m .ml{font-size:9px;color:var(--muted);margin-bottom:2px}
+.spu-card .m .mv{font-size:13px;font-weight:700}
+
+/* Summary box */
+.sumbox{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:18px 20px;margin-bottom:20px}
+.sumbox h3{font-size:13px;font-weight:700;color:#fff;margin-bottom:12px}
+.sum5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.sum-item{text-align:center;padding:12px;background:var(--bg3);border-radius:7px}
+.sum-item .sl{font-size:10px;color:var(--muted);margin-bottom:4px}
+.sum-item .sv{font-size:16px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-tag">订单利润深度分析 · SPU+SKU双维度 · 宋慧负责人账号</div>
+  <div class="hdr-title">NACHILA US 5月订单利润全景诊断</div>
+  <div class="hdr-sub">统计周期：2026-05-01 ～ 2026-05-21（21天）｜ 数据维度：1,601行SKU级 · 76个SPU · 742笔订单 ｜ 货币：USD</div>
+</div>
+
+<!-- 总览 KPI -->
+<div class="kpi8">
+  <div class="kpi"><div class="lbl">总销量</div><div class="val">742单</div><div class="sub info">日均 35.3单</div></div>
+  <div class="kpi"><div class="lbl">总销售额</div><div class="val">$31,237</div><div class="sub info">日均 $1,487</div></div>
+  <div class="kpi"><div class="lbl">总毛利润</div><div class="val ok">$4,495</div><div class="sub ok">毛利率 14.4%</div></div>
+  <div class="kpi"><div class="lbl">总广告花费</div><div class="val bad">-$5,011</div><div class="sub bad">广告费率 16.0%</div></div>
+  <div class="kpi"><div class="lbl">退货量</div><div class="val warn">73单</div><div class="sub warn">退货率 9.8%</div></div>
+  <div class="kpi"><div class="lbl">亏损SKU数</div><div class="val bad">~38个</div><div class="sub bad">有销量但毛利为负</div></div>
+  <div class="kpi"><div class="lbl">零销量SPU</div><div class="val bad">20个</div><div class="sub bad">仅产生仓储/广告费</div></div>
+  <div class="kpi"><div class="lbl">有效SPU</div><div class="val ok">56个</div><div class="sub ok">有销量SPU占比74%</div></div>
+</div>
+
+<div class="alert ar">
+  <span>🔴</span>
+  <span><strong>核心警示：</strong>总毛利润仅$4,495（14.4%），低于行业健康基准25%+。广告费率16%已超出毛利润总额，意味着广告花费($5,011)>毛利润($4,495)，若减去广告实际为亏损运营。Yellow配色系列SKU是最大亏损源，仅Yellow M/XL/L三个SKU合计亏损超过-$874。</span>
+</div>
+
+
+<!-- ===== PART 1: SPU维度分析 ===== -->
+<div class="sec"><span class="n">1</span><h2>SPU维度全景分析</h2><small>— 按销售额降序，识别核心产品与问题产品</small></div>
+
+<!-- SPU汇总大表 -->
+<div class="tw">
+<table>
+  <thead><tr>
+    <th>SPU</th><th>品类描述</th><th>SKU数</th><th>销量</th><th>销售额</th><th>销售额占比</th>
+    <th>毛利润</th><th>毛利率</th><th>广告花费</th><th>广告费率</th><th>ACOS</th>
+    <th>退货量</th><th>退货率</th><th>广告占比</th><th>客单价</th><th>综合评级</th>
+  </tr></thead>
+  <tbody>
+    <!-- Tier 1: 核心爆款 -->
+    <tr class="rg">
+      <td class="mono nb">31129042</td><td><strong>女背心七分套装（主推）</strong></td><td class="r">237</td><td class="r ng">422</td>
+      <td class="r ng">$19,386</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:62%;background:var(--green)"></div></div><span class="bv ng">62.1%</span></div></td>
+      <td class="r ng">$3,085</td><td class="r ny">15.9%</td>
+      <td class="r bad">-$3,715</td><td class="r ny">19.2%</td><td class="r ng">24.2%</td>
+      <td class="r warn">33</td><td class="r ny">7.8%</td><td class="r bad">85.3%</td><td class="r">$45.94</td>
+      <td><span class="b by">⚠ 主力但内耗</span></td>
+    </tr>
+    <tr class="rg">
+      <td class="mono nb">G3829133</td><td>女背心七分套装（关联款）</td><td class="r">21</td><td class="r">27</td>
+      <td class="r ng">$1,912</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:6.1%;background:var(--blue)"></div></div><span class="bv">6.1%</span></div></td>
+      <td class="r ng">$385</td><td class="r ng">20.1%</td>
+      <td class="r">-$249</td><td class="r ng">13.0%</td><td class="r ng">23.0%</td>
+      <td class="r">2</td><td class="r ng">7.4%</td><td class="r bad">96.3%</td><td class="r">$70.80</td>
+      <td><span class="b bg">✓ 高客单优质</span></td>
+    </tr>
+    <tr>
+      <td class="mono nb">G3836059</td><td>女七分裤（平销款）</td><td class="r">25</td><td class="r">47</td>
+      <td class="r">$1,693</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:5.4%;background:var(--blue)"></div></div><span class="bv">5.4%</span></div></td>
+      <td class="r ng">$258</td><td class="r ng">15.2%</td>
+      <td class="r">-$96</td><td class="r ng">5.7%</td><td class="r ng">23.6%</td>
+      <td class="r">2</td><td class="r ng">4.3%</td><td class="r">34.0%</td><td class="r">$36.03</td>
+      <td><span class="b bg">✓ 稳定出单</span></td>
+    </tr>
+    <tr class="rg">
+      <td class="mono nb">G3920438</td><td>女吊带短裤套装（新品A）</td><td class="r">20</td><td class="r">22</td>
+      <td class="r">$872</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:2.8%;background:var(--teal)"></div></div><span class="bv">2.8%</span></div></td>
+      <td class="r ng">$217</td><td class="r ng">24.9%</td>
+      <td class="r">-$44</td><td class="r ng">5.0%</td><td class="r ng">13.5%</td>
+      <td class="r warn">5</td><td class="r warn">22.7%</td><td class="r">36.4%</td><td class="r">$39.65</td>
+      <td><span class="b bg">✓ 新品爆发</span></td>
+    </tr>
+    <tr class="rg">
+      <td class="mono nb">G3933003</td><td>女背心长裤套装</td><td class="r">15</td><td class="r">17</td>
+      <td class="r">$551</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:1.8%;background:var(--teal)"></div></div><span class="bv">1.8%</span></div></td>
+      <td class="r ng">$146</td><td class="r ng">26.5%</td>
+      <td class="r">-$56</td><td class="r ny">10.2%</td><td class="r warn">53.1%</td>
+      <td class="r">1</td><td class="r">5.9%</td><td class="r">17.6%</td><td class="r">$32.40</td>
+      <td><span class="b by">⚠ ACOS偏高</span></td>
+    </tr>
+    <tr>
+      <td class="mono nb">31182016</td><td>竹纤维套装16系列</td><td class="r">30</td><td class="r">14</td>
+      <td class="r">$506</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:1.6%;background:var(--blue)"></div></div><span class="bv">1.6%</span></div></td>
+      <td class="r ng">$86</td><td class="r ng">17.1%</td>
+      <td class="r">-$46</td><td class="r">9.1%</td><td class="r ng">23.9%</td>
+      <td class="r warn">3</td><td class="r warn">21.4%</td><td class="r">42.9%</td><td class="r">$36.13</td>
+      <td><span class="b bb">观察中</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3820037</td><td>女套装（老款）</td><td class="r">20</td><td class="r">15</td>
+      <td class="r">$469</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:1.5%;background:var(--red)"></div></div><span class="bv">1.5%</span></div></td>
+      <td class="r bad">-$1</td><td class="r bad">-0.2%</td>
+      <td class="r bad">-$71</td><td class="r bad">15.0%</td><td class="r bad">36.7%</td>
+      <td class="r warn">3</td><td class="r warn">20.0%</td><td class="r">40.0%</td><td class="r">$31.27</td>
+      <td><span class="b br">❌ 亏损停投</span></td>
+    </tr>
+    <tr>
+      <td class="mono nb">G3829035</td><td>女款印花套装</td><td class="r">44</td><td class="r">9</td>
+      <td class="r">$317</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:1.0%;background:var(--blue)"></div></div><span class="bv">1.0%</span></div></td>
+      <td class="r ng">$77</td><td class="r ng">24.2%</td>
+      <td class="r">-$24</td><td class="r">7.5%</td><td class="r warn">204.7%</td>
+      <td class="r">1</td><td class="r">11.1%</td><td class="r">0.0%</td><td class="r">$35.19</td>
+      <td><span class="b by">⚠ ACOS异常高</span></td>
+    </tr>
+    <tr class="ry">
+      <td class="mono nb">G3920443</td><td>女吊带短裤套装（新品B）</td><td class="r">20</td><td class="r">8</td>
+      <td class="r">$286</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:0.9%;background:var(--orange)"></div></div><span class="bv">0.9%</span></div></td>
+      <td class="r ng">$40</td><td class="r ny">13.9%</td>
+      <td class="r">-$43</td><td class="r ny">15.0%</td><td class="r ng">14.5%</td>
+      <td class="r">0</td><td class="r ng">0%</td><td class="r bad">100.0%</td><td class="r">$35.76</td>
+      <td><span class="b by">⚠ 纯广告驱动</span></td>
+    </tr>
+    <tr class="ry">
+      <td class="mono nb">G3913111</td><td>女短袖套装</td><td class="r">16</td><td class="r">9</td>
+      <td class="r">$284</td>
+      <td><div class="bar"><div class="bt"><div class="bf" style="width:0.9%;background:var(--orange)"></div></div><span class="bv">0.9%</span></div></td>
+      <td class="r ny">$19</td><td class="r ny">6.7%</td>
+      <td class="r">-$46</td><td class="r bad">16.3%</td><td class="r ng">24.1%</td>
+      <td class="r">0</td><td class="r ng">0%</td><td class="r bad">66.7%</td><td class="r">$31.53</td>
+      <td><span class="b by">⚠ 毛利偏低</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G4029160</td><td>新品B（无广告）</td><td class="r">6</td><td class="r">6</td>
+      <td class="r">$240</td><td></td>
+      <td class="r bad">-$43</td><td class="r bad">-17.7%</td>
+      <td class="r">$0</td><td class="r">0%</td><td>—</td>
+      <td class="r">0</td><td class="r">0%</td><td class="r">0%</td><td class="r">$39.99</td>
+      <td><span class="b br">❌ 定价亏损</span></td>
+    </tr>
+    <tr class="rg">
+      <td class="mono nb">G4029159</td><td>新品A（无广告）</td><td class="r">5</td><td class="r">6</td>
+      <td class="r">$240</td><td></td>
+      <td class="r ng">$51</td><td class="r ng">21.1%</td>
+      <td class="r">$0</td><td class="r ng">0%</td><td>—</td>
+      <td class="r">0</td><td class="r ng">0%</td><td class="r ng">0%</td><td class="r">$39.99</td>
+      <td><span class="b bg">✓ 纯自然流量</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3913133</td><td>女短袖睡裙</td><td class="r">20</td><td class="r">7</td>
+      <td class="r">$235</td><td></td>
+      <td class="r bad">-$45</td><td class="r bad">-19.2%</td>
+      <td class="r bad">-$52</td><td class="r bad">22.3%</td><td class="r ng">22.9%</td>
+      <td class="r warn">1</td><td class="r ny">14.3%</td><td class="r bad">85.7%</td><td class="r">$33.56</td>
+      <td><span class="b br">❌ 亏损停投</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3933028</td><td>女背心套装</td><td class="r">15</td><td class="r">6</td>
+      <td class="r">$183</td><td></td>
+      <td class="r bad">-$30</td><td class="r bad">-16.2%</td>
+      <td class="r bad">-$67</td><td class="r bad">36.8%</td><td class="r warn">52.0%</td>
+      <td class="r warn">1</td><td class="r ny">16.7%</td><td class="r bad">66.7%</td><td class="r">$30.46</td>
+      <td><span class="b br">❌ 严重亏损</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3836015</td><td>女七分套装（下架品）</td><td class="r">15</td><td class="r">2</td>
+      <td class="r">$70</td><td></td>
+      <td class="r bad">-$46</td><td class="r bad">-66.0%</td>
+      <td class="r bad">-$36</td><td class="r bad">50.7%</td><td class="r ny">18.2%</td>
+      <td class="r bad">2</td><td class="r bad">100%</td><td class="r bad">250%</td><td class="r">$35.19</td>
+      <td><span class="b br">🚨 下架+全退货</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3913080</td><td>女短裙（特殊案例）</td><td class="r">16</td><td class="r">1</td>
+      <td class="r">$37</td><td></td>
+      <td class="r bad">-$39</td><td class="r bad">-105.6%</td>
+      <td class="r bad">-$39</td><td class="r bad">106.4%</td><td class="r">21.7%</td>
+      <td class="r">0</td><td class="r">0%</td><td class="r bad">500%</td><td class="r">$36.99</td>
+      <td><span class="b br">🚨 广告买流量极亏</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3929057</td><td>女短七（下架）</td><td class="r">15</td><td class="r bad">0</td>
+      <td class="r">$0</td><td></td>
+      <td class="r bad">-$84</td><td>—</td>
+      <td class="r bad">-$81</td><td>—</td><td class="r">29.1%</td>
+      <td class="r">0</td><td>—</td><td>—</td><td>—</td>
+      <td><span class="b br">🚨 0销量仍烧广告</span></td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">G3915088</td><td>女打底裤</td><td class="r">16</td><td class="r">3</td>
+      <td class="r">$68</td><td></td>
+      <td class="r bad">-$27</td><td class="r bad">-40.3%</td>
+      <td class="r bad">-$24</td><td class="r bad">34.6%</td><td class="r warn">52.3%</td>
+      <td class="r bad">3</td><td class="r bad">100%</td><td class="r bad">66.7%</td><td class="r">$22.67</td>
+      <td><span class="b br">🚨 全部退货</span></td>
+    </tr>
+    <!-- Top performers no ads -->
+    <tr class="rg">
+      <td class="mono nb">G3933093</td><td>纯自然流量款</td><td class="r">16</td><td class="r">5</td>
+      <td class="r">$140</td><td></td>
+      <td class="r ng">$53</td><td class="r ng">38.2%</td>
+      <td class="r ng">$0</td><td class="r ng">0%</td><td>—</td>
+      <td class="r ng">0</td><td class="r ng">0%</td><td class="r ng">0%</td><td class="r">$27.96</td>
+      <td><span class="b bg">🌟 纯自然高利润</span></td>
+    </tr>
+    <tr class="rg">
+      <td class="mono nb">81129504</td><td>（纯自然流量）</td><td class="r">49</td><td class="r">6</td>
+      <td class="r">$209</td><td></td>
+      <td class="r ng">$55</td><td class="r ng">26.5%</td>
+      <td class="r ng">$0</td><td class="r ng">0%</td><td>—</td>
+      <td class="r ng">0</td><td class="r ng">0%</td><td class="r ng">0%</td><td class="r">$34.80</td>
+      <td><span class="b bg">✓ 自然流优质</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== PART 2: SPU四象限分析 ===== -->
+<div class="sec"><span class="n">2</span><h2>SPU四象限战略定位</h2><small>— 增长/收割/培育/退出</small></div>
+
+<div class="c2">
+  <div>
+    <div class="card" style="border-color:rgba(63,185,80,.3);margin-bottom:12px">
+      <h4 style="color:var(--green)">🚀 第一象限：增长加速（高毛利 + 高销量）</h4>
+      <div class="row"><span class="l">31129042 女背心七分套装</span><span class="ng">$3,085利润 / 422单</span></div>
+      <div class="row"><span class="l">G3829133 女背心七分（高客单）</span><span class="ng">$385利润 / 客单$70.8</span></div>
+      <div class="row"><span class="l">G3920438 女吊带短裤（新品A）</span><span class="ng">$217利润 / 毛利24.9%</span></div>
+      <div class="row"><span class="l">G3836059 女七分裤</span><span class="ng">$258利润 / 47单</span></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--muted)">策略：加大广告预算，提升精准词占比，保住排名，扩充配色/尺码</div>
+    </div>
+    <div class="card" style="border-color:rgba(88,166,255,.3)">
+      <h4 style="color:var(--blue)">💡 第三象限：潜力培育（低销量但毛利健康）</h4>
+      <div class="row"><span class="l">G3933093 纯自然高利润款</span><span class="ng">38.2%毛利 / 0广告</span></div>
+      <div class="row"><span class="l">G4029159 新品A</span><span class="ng">21.1%毛利 / 0广告</span></div>
+      <div class="row"><span class="l">G3913010 / G3833019 等</span><span class="ng">毛利率40%+</span></div>
+      <div class="row"><span class="l">G3933061 背心长裤（新）</span><span class="ng">22.8%毛利</span></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--muted)">策略：小额广告测试，挖掘自然流量潜力，监测转化后加投</div>
+    </div>
+  </div>
+  <div>
+    <div class="card" style="border-color:rgba(210,153,34,.3);margin-bottom:12px">
+      <h4 style="color:var(--orange)">⚠ 第二象限：重点优化（高销量但利润偏低）</h4>
+      <div class="row"><span class="l">31129042（Yellow系列SKU）</span><span class="nm">-$874亏损拖累整体</span></div>
+      <div class="row"><span class="l">G3933003 背心长裤</span><span class="ny">ACOS 53.1% 超标</span></div>
+      <div class="row"><span class="l">G3913111 女短袖套装</span><span class="ny">毛利仅6.7%</span></div>
+      <div class="row"><span class="l">31182016 竹纤维16系列</span><span class="ny">退货率21.4%</span></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--muted)">策略：否定无效词，停止亏损SKU广告，提升Listing转化</div>
+    </div>
+    <div class="card" style="border-color:rgba(248,81,73,.3)">
+      <h4 style="color:var(--red)">❌ 第四象限：清退止损（亏损+低销量）</h4>
+      <div class="row"><span class="l">G3836015 下架品</span><span class="nm">退货率100% / -$46</span></div>
+      <div class="row"><span class="l">G3929057 下架品</span><span class="nm">0销量烧-$81广告</span></div>
+      <div class="row"><span class="l">G3915088 打底裤</span><span class="nm">退货率100% / -$27</span></div>
+      <div class="row"><span class="l">G3913080 女短裙</span><span class="nm">ACOS 106% / 毛利-105%</span></div>
+      <div class="row"><span class="l">G3913133 女短袖睡裙</span><span class="nm">-19.2%毛利 / 停广告</span></div>
+      <div class="row"><span class="l">G3933028 女背心套装</span><span class="nm">-16.2%毛利 / ACOS52%</span></div>
+      <div class="row"><span class="l">G4029160 新品B</span><span class="nm">-17.7%毛利 / 定价错误</span></div>
+      <div style="margin-top:8px;font-size:11px;color:var(--muted)">策略：立即暂停广告，下架或提价，清仓库存</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== PART 3: 主推SPU 31129042 SKU详细分析 ===== -->
+<div class="sec"><span class="n">3</span><h2>主推SPU 31129042 · SKU精细化诊断</h2><small>— 销售额$19,386，占总销售额62%，422单</small></div>
+
+<div class="alert ay">
+  <span>⚠</span>
+  <span><strong>31129042整体问题：</strong>广告占比85.3%（422单中360单来自广告），说明自然流量极弱，高度依赖广告驱动。Yellow配色系列（M/XL/L）是账户最大亏损源，仅这3个SKU广告花费达-$1,189，毛利润亏损-$874。PG Tie-dye系列（M/L/XL/XXL）4个SKU广告总花费-$238，毛利亏损-$131。</span>
+</div>
+
+<div class="tw">
+<table>
+  <thead><tr>
+    <th>SKU</th><th>颜色/尺码</th><th>销量</th><th>销售额</th><th>毛利润</th><th>毛利率</th><th>广告花费</th><th>广告占利</th><th>退货量</th><th>客单价</th><th>诊断</th><th>建议</th>
+  </tr></thead>
+  <tbody>
+    <!-- 异常高售价SKU（CA站） -->
+    <tr class="rg">
+      <td class="mono">311290420101</td><td>Navy Blue, S</td><td class="r">1</td>
+      <td class="r ng">$599.63</td><td class="r ng">$168</td><td class="r ng">28.1%</td>
+      <td class="r ng">$0</td><td>—</td><td class="r">0</td><td class="r nb">$599.63</td>
+      <td><span class="b bp">CA站高价单</span></td><td>确认是否CA站价格，持续</td>
+    </tr>
+    <!-- Yellow 亏损系列 -->
+    <tr class="rr">
+      <td class="mono nm">311290421102</td><td style="color:var(--red)">Yellow, M ⚠</td><td class="r">5</td>
+      <td class="r">$229.95</td><td class="r bad">-$577.74</td><td class="r bad">—</td>
+      <td class="r bad">-$683.36</td><td class="r bad">广告>销售额</td><td class="r">0</td><td class="r">$45.69</td>
+      <td><span class="b br">🚨 最大亏损SKU</span></td><td style="color:#fca5a5">立即停止广告投放</td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">311290421104</td><td style="color:var(--red)">Yellow, XL ⚠</td><td class="r">9</td>
+      <td class="r">$413.91</td><td class="r bad">-$173.03</td><td class="r bad">-41.8%</td>
+      <td class="r bad">-$332.11</td><td class="r bad">广告>毛利</td><td class="r">0</td><td class="r">$45.48</td>
+      <td><span class="b br">❌ 高花费亏损</span></td><td style="color:#fca5a5">广告花费降50%</td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">311290421103</td><td style="color:var(--red)">Yellow, L ⚠</td><td class="r">6</td>
+      <td class="r">$275.94</td><td class="r bad">-$123.46</td><td class="r bad">-44.7%</td>
+      <td class="r bad">-$173.25</td><td class="r bad">广告>毛利</td><td class="r">1</td><td class="r">$45.22</td>
+      <td><span class="b br">❌ 亏损+退货</span></td><td style="color:#fca5a5">停广告</td>
+    </tr>
+    <!-- PG Tie-dye 亏损系列 -->
+    <tr class="rr">
+      <td class="mono nm">311290421002</td><td>PG Tie-dye, M</td><td class="r">4</td>
+      <td class="r">$183.96</td><td class="r bad">-$34.34</td><td class="r bad">-18.7%</td>
+      <td class="r bad">-$85.88</td><td class="r bad">—</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b br">❌ 亏损</span></td><td style="color:#fca5a5">降广告竞价</td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">311290421003</td><td>PG Tie-dye, L</td><td class="r">3</td>
+      <td class="r">$137.97</td><td class="r bad">-$41.77</td><td class="r bad">-30.3%</td>
+      <td class="r bad">-$102.40</td><td class="r bad">—</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b br">❌ 亏损</span></td><td style="color:#fca5a5">降广告竞价</td>
+    </tr>
+    <!-- 其他亏损SKU -->
+    <tr class="rr">
+      <td class="mono nm">311290420704</td><td>Charcoal Heather, XL</td><td class="r">2</td>
+      <td class="r">$88.30</td><td class="r bad">-$196.19</td><td class="r bad">-222%</td>
+      <td class="r bad">-$192.49</td><td class="r bad">广告>>销售额</td><td class="r warn">1</td><td class="r">$44.15</td>
+      <td><span class="b br">🚨 第二大亏损</span></td><td style="color:#fca5a5">立即停广告</td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">311290420503</td><td>Pink, L</td><td class="r">3</td>
+      <td class="r">$137.97</td><td class="r bad">-$84.84</td><td class="r bad">-61.5%</td>
+      <td class="r bad">-$144.70</td><td class="r bad">—</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b br">❌ 亏损</span></td><td style="color:#fca5a5">停广告</td>
+    </tr>
+    <tr class="rr">
+      <td class="mono nm">311290420802</td><td>Light Blue, M</td><td class="r">3</td>
+      <td class="r">$137.97</td><td class="r bad">-$68.59</td><td class="r bad">-49.7%</td>
+      <td class="r bad">-$99.60</td><td class="r bad">—</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b br">❌ 亏损</span></td><td style="color:#fca5a5">停广告</td>
+    </tr>
+    <!-- 优质出单SKU -->
+    <tr class="rg">
+      <td class="mono">311290422702</td><td>Blue Indigo, M</td><td class="r">8</td>
+      <td class="r ng">$367.92</td><td class="r ng">$177.71</td><td class="r ng">48.3%</td>
+      <td class="r">-$17.34</td><td class="r ng">9.8%</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b bg">🌟 最优SKU</span></td><td style="color:#86efac">加大广告预算</td>
+    </tr>
+    <tr class="rg">
+      <td class="mono">311290422303</td><td>Camel, L</td><td class="r">6</td>
+      <td class="r ng">$275.94</td><td class="r ng">$106.21</td><td class="r ng">38.5%</td>
+      <td class="r ng">-$0.01</td><td class="r ng">0%</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b bg">🌟 纯自然流量</span></td><td style="color:#86efac">适当加广告测量</td>
+    </tr>
+    <tr class="rg">
+      <td class="mono">311290420603</td><td>Aqua Green, L</td><td class="r">7</td>
+      <td class="r ng">$308.13</td><td class="r ng">$101.63</td><td class="r ng">33.0%</td>
+      <td class="r">-$30.20</td><td class="r ng">9.8%</td><td class="r">0</td><td class="r">$44.02</td>
+      <td><span class="b bg">✓ 优质</span></td><td style="color:#86efac">维持</td>
+    </tr>
+    <tr class="rg">
+      <td class="mono">311290422701</td><td>Blue Indigo, S</td><td class="r">5</td>
+      <td class="r ng">$224.95</td><td class="r ng">$97.73</td><td class="r ng">43.4%</td>
+      <td class="r">-$6.90</td><td class="r ng">3.1%</td><td class="r warn">1</td><td class="r">$44.78</td>
+      <td><span class="b bg">✓ 优质</span></td><td style="color:#86efac">维持</td>
+    </tr>
+    <tr class="rg">
+      <td class="mono">311290420303</td><td>Black, L</td><td class="r">5</td>
+      <td class="r">$229.95</td><td class="r ng">$71.90</td><td class="r ng">31.3%</td>
+      <td class="r">-$29.73</td><td class="r">12.9%</td><td class="r">0</td><td class="r">$45.99</td>
+      <td><span class="b bg">✓ 稳定</span></td><td style="color:#86efac">维持</td>
+    </tr>
+    <tr class="rg">
+      <td class="mono">311290420301</td><td>Black, S</td><td class="r">4</td>
+      <td class="r">$179.96</td><td class="r ng">$81.22</td><td class="r ng">45.1%</td>
+      <td class="r ng">-$0.63</td><td class="r ng">0.4%</td><td class="r">0</td><td class="r">$43.87</td>
+      <td><span class="b bg">🌟 低广告高利</span></td><td style="color:#86efac">保持，挖掘自然流量</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+<!-- ===== PART 4: 其他主要SPU SKU分析 ===== -->
+<div class="sec"><span class="n">4</span><h2>其他核心SPU SKU诊断</h2><small>— G3829133 / G3836059 / G3920438 / G3933003</small></div>
+
+<div class="c2">
+<!-- G3829133 -->
+<div>
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;margin-bottom:12px">
+    <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:10px">G3829133 女背心七分套装（关联款）· 总销售额$1,912 · 毛利率20.1%</div>
+    <div class="alert ar" style="margin-bottom:8px;font-size:11px;padding:7px 10px">
+      <span>⚠</span><span>G38291330201 Purplish Grey S以$863.21高价成交1单（应为CA站），贡献了$384利润；G38291330202 Purplish Grey M是问题SKU，广告花费-$152.47导致毛利-$143.88。</span>
+    </div>
+    <div class="tw" style="margin-bottom:0">
+    <table>
+      <tr><th>SKU</th><th>颜色/码</th><th>销量</th><th>销售额</th><th>毛利润</th><th>广告花费</th><th>诊断</th></tr>
+      <tr class="rg"><td class="mono">G38291330201</td><td>Purplish Grey S</td><td class="r">1</td><td class="r ng">$863</td><td class="r ng">$384</td><td class="r ng">$0</td><td><span class="b bg">CA高价单</span></td></tr>
+      <tr class="rr"><td class="mono nm">G38291330202</td><td>Purplish Grey M</td><td class="r">4</td><td class="r">$184</td><td class="r bad">-$144</td><td class="r bad">-$152</td><td><span class="b br">❌ 停广告</span></td></tr>
+      <tr class="rg"><td class="mono">G38291330203</td><td>Purplish Grey L</td><td class="r">3</td><td class="r">$131</td><td class="r ng">$39</td><td class="r">-$2</td><td><span class="b bg">✓ 优质</span></td></tr>
+      <tr class="rg"><td class="mono">G38291330204</td><td>Purplish Grey XL</td><td class="r">3</td><td class="r">$117</td><td class="r ng">$26</td><td class="r">-$3</td><td><span class="b bg">✓ 优质</span></td></tr>
+      <tr class="rg"><td class="mono">G38291330303</td><td>Navy Blue L</td><td class="r">3</td><td class="r">$117</td><td class="r ng">$30</td><td class="r">-$10</td><td><span class="b bg">✓ 优质</span></td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- G3836059 -->
+<div>
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;margin-bottom:12px">
+    <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:10px">G3836059 女七分裤（平销款）· 销售额$1,693 · 毛利率15.2%</div>
+    <div class="alert ay" style="margin-bottom:8px;font-size:11px;padding:7px 10px">
+      <span>⚠</span><span>Black XL有2笔交易：G38360590104第一笔$533（CA高价），第二笔$153（US正常价）。Violet系列（XL/L/M）ACOS高、退货多，是七分裤品类最大问题。</span>
+    </div>
+    <div class="tw" style="margin-bottom:0">
+    <table>
+      <tr><th>SKU</th><th>颜色/码</th><th>销量</th><th>销售额</th><th>毛利润</th><th>广告花费</th><th>诊断</th></tr>
+      <tr class="rg"><td class="mono">G38360590104</td><td>Black XL</td><td class="r">7</td><td class="r ng">$686</td><td class="r ng">$176</td><td class="r ng">$0</td><td><span class="b bg">🌟 主力SKU</span></td></tr>
+      <tr class="rg"><td class="mono">G38360590603</td><td>Oat Milk L</td><td class="r">4</td><td class="r">$100</td><td class="r ng">$32</td><td class="r">-$0.35</td><td><span class="b bg">✓ 优质</span></td></tr>
+      <tr class="rr"><td class="mono nm">G38360590404</td><td>Violet XL</td><td class="r">2</td><td class="r">$51</td><td class="r bad">-$40</td><td class="r bad">-$52</td><td><span class="b br">❌ 停广告</span></td></tr>
+      <tr class="rr"><td class="mono nm">G38360590402</td><td>Violet M</td><td class="r">2</td><td class="r">$50</td><td class="r bad">-$9</td><td class="r">-$6</td><td><span class="b br">⚠ 退货+亏</span></td></tr>
+      <tr class="rr"><td class="mono nm">G38360590601</td><td>Oat Milk S</td><td class="r">2</td><td class="r">$45</td><td class="r bad">-$7</td><td class="r">$0</td><td><span class="b by">⚠ 定价低</span></td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="c2">
+<!-- G3920438 -->
+<div>
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:10px">G3920438 女吊带短裤（新品A）· 销售额$872 · 毛利率24.9% · ⭐新品潜力款</div>
+    <div class="alert ag" style="margin-bottom:8px;font-size:11px;padding:7px 10px">
+      <span>✅</span><span>整体表现最好的新品。Black M(CVR高)、Pink S、Pink L均盈利。注意Aqua Green XL亏损-$32（广告-$2.48仅1单，定价或采购问题）。退货率22.7%需关注。</span>
+    </div>
+    <div class="tw" style="margin-bottom:0">
+    <table>
+      <tr><th>SKU</th><th>颜色/码</th><th>销量</th><th>毛利润</th><th>广告花费</th><th>诊断</th></tr>
+      <tr class="rg"><td class="mono">G39204380102</td><td>Black M</td><td class="r">3</td><td class="r ng">$61.14</td><td class="r">-$5.64</td><td><span class="b bg">🌟 最优SKU</span></td></tr>
+      <tr class="rg"><td class="mono">G39204380301</td><td>Pink S</td><td class="r">3</td><td class="r ng">$46.33</td><td class="r">-$8.54</td><td><span class="b bg">✓ 优质</span></td></tr>
+      <tr class="rg"><td class="mono">G39204380303</td><td>Pink L</td><td class="r">2</td><td class="r ng">$37.90</td><td class="r">-$0.70</td><td><span class="b bg">✓ 低广告高利</span></td></tr>
+      <tr class="rr"><td class="mono nm">G39204380504</td><td>Aqua Green XL</td><td class="r">1</td><td class="r bad">-$32.05</td><td class="r">-$2.48</td><td><span class="b br">❌ 采购成本高</span></td></tr>
+      <tr class="rr"><td class="mono nm">G39204380192</td><td>Pink M</td><td class="r">1</td><td class="r bad">-$15.39</td><td class="r">-$0.60</td><td><span class="b by">⚠ 退货风险</span></td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- G3933003 -->
+<div>
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px">
+    <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:10px">G3933003 女背心长裤套装 · 销售额$551 · 毛利率26.5% · ACOS53%过高</div>
+    <div class="alert ay" style="margin-bottom:8px;font-size:11px;padding:7px 10px">
+      <span>⚠</span><span>Black系列（L/M/XL）表现良好，毛利率40%+。问题在Navy Blue L和Pink M广告花费大，ACOS过高拉低整体表现。Aqua Green XL广告花费$14.59却只有$3毛利，需单独控制。</span>
+    </div>
+    <div class="tw" style="margin-bottom:0">
+    <table>
+      <tr><th>SKU</th><th>颜色/码</th><th>销量</th><th>毛利润</th><th>广告花费</th><th>诊断</th></tr>
+      <tr class="rg"><td class="mono">G39330030304</td><td>Black XL</td><td class="r">3</td><td class="r ng">$43.42</td><td class="r">-$1.80</td><td><span class="b bg">🌟 最优</span></td></tr>
+      <tr class="rg"><td class="mono">G39330030303</td><td>Black L</td><td class="r">3</td><td class="r ng">$40.54</td><td class="r ng">$0</td><td><span class="b bg">🌟 纯自然</span></td></tr>
+      <tr class="rg"><td class="mono">G39330030302</td><td>Black M</td><td class="r">2</td><td class="r ng">$31.56</td><td class="r ng">$0</td><td><span class="b bg">✓ 无广告盈利</span></td></tr>
+      <tr class="rr"><td class="mono nm">G39330030103</td><td>Navy Blue L</td><td class="r">2</td><td class="r bad">-$7.36</td><td class="r bad">-$27.07</td><td><span class="b br">❌ 停广告</span></td></tr>
+      <tr class="rr"><td class="mono nm">G39330030284</td><td>Pink M</td><td class="r">1</td><td class="r bad">-$9.28</td><td class="r bad">-$12.59</td><td><span class="b br">❌ 停广告</span></td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ===== PART 5: 问题汇总与优先行动 ===== -->
+<div class="sec"><span class="n">5</span><h2>全账户问题汇总 · 优先行动清单</h2><small>— 精准到SKU级别</small></div>
+
+<!-- 亏损SKU排行 -->
+<div style="margin-bottom:14px;font-size:12px;color:var(--muted)">▼ Top亏损SKU（毛利润&lt;0，销量&gt;0）— 合计亏损金额</div>
+<div class="tw">
+<table>
+  <thead><tr><th>排名</th><th>SKU</th><th>SPU</th><th>品名</th><th>销量</th><th>销售额</th><th>毛利润</th><th>广告花费</th><th>退货量</th><th>亏损根因</th><th>立即行动</th></tr></thead>
+  <tbody>
+    <tr class="rr"><td class="c bad">1</td><td class="mono nm">311290421102</td><td>31129042</td><td>Yellow, M</td><td class="r">5</td><td class="r">$229.95</td><td class="r bad">-$577.74</td><td class="r bad">-$683.36</td><td class="r">0</td><td>广告花费远超销售额，严重投入失控</td><td style="color:#fca5a5">今日停广告</td></tr>
+    <tr class="rr"><td class="c bad">2</td><td class="mono nm">311290420704</td><td>31129042</td><td>Charcoal Heather, XL</td><td class="r">2</td><td class="r">$88.30</td><td class="r bad">-$196.19</td><td class="r bad">-$192.49</td><td class="r warn">1</td><td>广告花费$192≈销售额，完全无利</td><td style="color:#fca5a5">今日停广告</td></tr>
+    <tr class="rr"><td class="c bad">3</td><td class="mono nm">311290421104</td><td>31129042</td><td>Yellow, XL</td><td class="r">9</td><td class="r">$413.91</td><td class="r bad">-$173.03</td><td class="r bad">-$332.11</td><td class="r">0</td><td>高销量但广告过投，每单实际亏$19</td><td style="color:#fca5a5">降广告50%</td></tr>
+    <tr class="rr"><td class="c bad">4</td><td class="mono nm">G38291330202</td><td>G3829133</td><td>Purplish Grey, M</td><td class="r">4</td><td class="r">$183.96</td><td class="r bad">-$143.88</td><td class="r bad">-$152.47</td><td class="r warn">1</td><td>广告花费远超毛利空间</td><td style="color:#fca5a5">停广告</td></tr>
+    <tr class="rr"><td class="c bad">5</td><td class="mono nm">311290421103</td><td>31129042</td><td>Yellow, L</td><td class="r">6</td><td class="r">$275.94</td><td class="r bad">-$123.46</td><td class="r bad">-$173.25</td><td class="r warn">1</td><td>Yellow系列广告ROI极差</td><td style="color:#fca5a5">停广告</td></tr>
+    <tr class="rr"><td class="c bad">6</td><td class="mono nm">G3913080（整体）</td><td>G3913080</td><td>女短裙-结构</td><td class="r">1</td><td class="r">$36.99</td><td class="r bad">-$39.05</td><td class="r bad">-$39.36</td><td class="r">0</td><td>广告销量5但实际销量1，ACOS106%</td><td style="color:#fca5a5">立即暂停</td></tr>
+    <tr class="rr"><td class="c bad">7</td><td class="mono nm">G3929057（整体）</td><td>G3929057</td><td>下架品</td><td class="r bad">0</td><td class="r">$0</td><td class="r bad">-$83.63</td><td class="r bad">-$81.25</td><td class="r">0</td><td>下架SKU仍烧广告，0销量</td><td style="color:#fca5a5">立即暂停</td></tr>
+    <tr class="rr"><td class="c bad">8</td><td class="mono nm">G3915088（全组）</td><td>G3915088</td><td>女打底裤</td><td class="r">3</td><td class="r">$68.01</td><td class="r bad">-$27.43</td><td class="r bad">-$23.56</td><td class="r bad">3</td><td>退货率100%，全退</td><td style="color:#fca5a5">下架+停广告</td></tr>
+    <tr class="rr"><td class="c bad">9</td><td class="mono nm">311290420503</td><td>31129042</td><td>Pink, L</td><td class="r">3</td><td class="r">$137.97</td><td class="r bad">-$84.84</td><td class="r bad">-$144.70</td><td class="r">0</td><td>广告花费远超毛利空间</td><td style="color:#fca5a5">停广告</td></tr>
+    <tr class="rr"><td class="c bad">10</td><td class="mono nm">G3933028（整体）</td><td>G3933028</td><td>女背心套装</td><td class="r">6</td><td class="r">$182.74</td><td class="r bad">-$29.67</td><td class="r bad">-$67.33</td><td class="r warn">1</td><td>ACOS52%，整体亏损</td><td style="color:#fca5a5">停广告/降价</td></tr>
+  </tbody>
+</table>
+</div>
+
+
+<!-- ===== 成本结构诊断 ===== -->
+<div class="sec"><span class="n">6</span><h2>成本结构诊断</h2><small>— 毛利润流向分解</small></div>
+
+<div class="c2">
+  <div class="card">
+    <h4>主推SPU 31129042成本结构（$19,386销售额）</h4>
+    <div class="row"><span class="l">销售额</span><span class="ng">+$19,386</span></div>
+    <div class="row"><span class="l">平台费（亚马逊）</span><span class="nm">-$3,244 (-16.7%)</span></div>
+    <div class="row"><span class="l">FBA发货费</span><span class="nm">-$3,217 (-16.6%)</span></div>
+    <div class="row"><span class="l">采购+头程成本</span><span class="nm">-$4,256 (-21.9%)</span></div>
+    <div class="row"><span class="l">总仓储费</span><span class="nm">-$614 (-3.2%)</span></div>
+    <div class="row"><span class="l">退款</span><span class="nm">-$1,263 (-6.5%)</span></div>
+    <div class="row"><span class="l">促销折扣</span><span class="nm">-$180 (-0.9%)</span></div>
+    <div class="row" style="border-top:1px solid var(--border2)"><span class="l">毛利润</span><span class="ng">+$3,085 (15.9%)</span></div>
+    <div class="row"><span class="l">广告花费（额外）</span><span class="nm">-$3,715 (-19.2%)</span></div>
+    <div class="row" style="font-weight:700"><span class="l">广告后净利</span><span class="nm">-$630 (-3.2%)</span></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--red)">⚠ 广告花费($3,715) > 毛利润($3,085)，主推SPU实际为亏损运营！</div>
+  </div>
+
+  <div class="card">
+    <h4>全账户利润健康度评估</h4>
+    <div class="row"><span class="l">毛利率现状</span><span class="ny">14.4%（目标25%+）</span></div>
+    <div class="row"><span class="l">广告费占销售额</span><span class="nm">16.0%（占用毛利空间大）</span></div>
+    <div class="row"><span class="l">FBA费占销售额</span><span class="nm">~16%（正常范围）</span></div>
+    <div class="row"><span class="l">平台费占销售额</span><span class="nm">~16%（正常范围）</span></div>
+    <div class="row"><span class="l">采购+头程占销售额</span><span class="nm">~22%（偏高，需降成本）</span></div>
+    <div class="row"><span class="l">退货率</span><span class="nm">9.8%（警戒线，目标&lt;5%）</span></div>
+    <div class="row"><span class="l">亏损SKU占比</span><span class="nm">~20%有销量SKU亏损</span></div>
+    <div style="margin-top:8px;padding:8px;background:rgba(248,81,73,.1);border-radius:5px;font-size:11px;color:#fca5a5">
+      健康利润公式：毛利率需≥平台费率+FBA费率+广告费率 ≈ 48%以上才能实现净利润为正，当前毛利率14.4%严重不足。
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== PART 7: 综合行动计划 ===== -->
+<div class="sec"><span class="n">7</span><h2>综合行动计划</h2><small>— 按优先级分层执行</small></div>
+
+<div class="tw">
+<table>
+  <thead><tr><th>优先级</th><th>执行时限</th><th>对象（精准到SKU/SPU）</th><th>具体行动</th><th>预期收益</th></tr></thead>
+  <tbody>
+    <tr class="rr"><td><span class="b br">🚨 P0</span></td><td>今日</td><td class="mono">311290421102（Yellow M）<br>311290420704（Charcoal Heather XL）</td><td>立即停止这2个SKU的所有广告投放</td><td>止血$870+/月亏损</td></tr>
+    <tr class="rr"><td><span class="b br">🚨 P0</span></td><td>今日</td><td class="mono">G3929057（下架品整体）</td><td>暂停所有广告活动</td><td>止血$81广告浪费</td></tr>
+    <tr class="rr"><td><span class="b br">🚨 P0</span></td><td>今日</td><td class="mono">G3915088（女打底裤）</td><td>下架产品 + 停广告（退货率100%）</td><td>止血退货损失</td></tr>
+    <tr class="rr"><td><span class="b br">P0</span></td><td>今日</td><td class="mono">311290421104（Yellow XL）<br>311290421103（Yellow L）<br>311290420503（Pink L）<br>311290420802（Light Blue M）</td><td>暂停这4个SKU的广告 OR 竞价降60%</td><td>释放$560/月无效广告</td></tr>
+    <tr class="ry"><td><span class="b by">⚡ P1</span></td><td>本周</td><td class="mono">G3836015（下架品）<br>G3913080（女短裙异常）</td><td>暂停广告；核查库存是否需要清仓</td><td>止血$75+</td></tr>
+    <tr class="ry"><td><span class="b by">⚡ P1</span></td><td>本周</td><td class="mono">G3933028（女背心套装）<br>G3913133（女短袖睡裙）</td><td>停广告；产品重新定价（提价$5-8）或下架</td><td>毛利率提升至0%以上</td></tr>
+    <tr class="ry"><td><span class="b by">⚡ P1</span></td><td>本周</td><td class="mono">G4029160（新品B）</td><td>紧急复核采购成本/定价，提价或联系采购降本</td><td>扭转-17.7%毛利</td></tr>
+    <tr class="ry"><td><span class="b by">⚡ P1</span></td><td>本周</td><td class="mono">G3920438（新品A全系列）</td><td>降低退货率：优化尺码指南/主图尺寸标注</td><td>退货率22.7%→10%</td></tr>
+    <tr class="rg"><td><span class="b bb">📌 P2</span></td><td>下周</td><td class="mono">311290422702（Blue Indigo M）<br>311290420603（Aqua Green L）<br>311290422303（Camel L）</td><td>增加广告预算15-20%；建立精准词活动</td><td>高毛利SKU扩量</td></tr>
+    <tr class="rg"><td><span class="b bb">📌 P2</span></td><td>下周</td><td class="mono">G3933093（纯自然款）<br>G4029159（新品A无广告）</td><td>开始小额广告测试（$5/天）</td><td>挖掘转化潜力</td></tr>
+    <tr class="rg"><td><span class="b bb">📌 P2</span></td><td>下周</td><td class="mono">G3829133（关联款）</td><td>重点投放Purplish Grey L/XL/XXL（盈利SKU）；停G38291330202广告</td><td>ACOS从23%→18%</td></tr>
+    <tr><td><span class="b bg">🔬 P3</span></td><td>下月</td><td class="mono">31129042 Yellow全系列</td><td>评估Yellow配色是否需要下架或独立提价</td><td>消除最大亏损源</td></tr>
+    <tr><td><span class="b bg">🔬 P3</span></td><td>下月</td><td class="mono">G3836059 Violet系列</td><td>下架Violet XL；Violet L/M降价$3测试退货率</td><td>七分裤品类健康化</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 预期改善目标 -->
+<div class="sumbox" style="margin-top:20px">
+  <h3>🎯 执行P0+P1后2周内量化预期目标</h3>
+  <div class="sum5">
+    <div class="sum-item"><div class="sl">整体毛利率</div><div class="sv ok">20-22%</div><div style="font-size:10px;color:var(--muted)">当前14.4%</div></div>
+    <div class="sum-item"><div class="sl">广告费率</div><div class="sv warn">≤13%</div><div style="font-size:10px;color:var(--muted)">当前16.0%</div></div>
+    <div class="sum-item"><div class="sl">每周释放无效广告</div><div class="sv ok">$250+</div><div style="font-size:10px;color:var(--muted)">亏损SKU广告停投</div></div>
+    <div class="sum-item"><div class="sl">退货率</div><div class="sv warn">≤6%</div><div style="font-size:10px;color:var(--muted)">当前9.8%</div></div>
+    <div class="sum-item"><div class="sl">净利润（广告后）</div><div class="sv ok">由负转正</div><div style="font-size:10px;color:var(--muted)">当前广告后为负</div></div>
+  </div>
+  <div style="margin-top:12px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px">
+    数据来源：订单利润-ASIN-2026-05-01_2026-05-22 ｜ 1,601行SKU数据 ｜ 76个SPU维度 ｜ 21天周期
+  </div>
+</div>
+
+</div>
+</body>
+</html>

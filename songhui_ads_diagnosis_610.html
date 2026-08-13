@@ -1,0 +1,372 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary)}
+.section{padding:1.5rem 0 0}
+h2{font-size:16px;font-weight:500;margin-bottom:12px;color:var(--color-text-primary)}
+h3{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.9rem 1rem}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:500}
+.metric-val.bad{color:#A32D2D}
+.metric-val.warn{color:#854F0B}
+.metric-val.ok{color:#3B6D11}
+.metric-val.good{color:#0F6E56}
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md)}
+.badge-red{background:#FCEBEB;color:#A32D2D}
+.badge-amber{background:#FAEEDA;color:#854F0B}
+.badge-green{background:#EAF3DE;color:#3B6D11}
+.badge-teal{background:#E1F5EE;color:#0F6E56}
+.badge-blue{background:#E6F1FB;color:#185FA5}
+.badge-gray{background:#F1EFE8;color:#5F5E5A}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:6px 8px;border-bottom:.5px solid var(--color-border-tertiary);white-space:nowrap}
+td{padding:6px 8px;border-bottom:.5px solid var(--color-border-tertiary);vertical-align:top;line-height:1.4}
+tr:last-child td{border-bottom:none}
+.camp-name{font-weight:500;font-size:12px;max-width:180px;word-break:break-word}
+.action-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;line-height:1.6;border-left:3px solid}
+.action-red{border-left-color:#E24B4A}
+.action-amber{border-left-color:#EF9F27}
+.action-green{border-left-color:#1D9E75}
+.action-blue{border-left-color:#378ADD}
+.divider{border:none;border-top:.5px solid var(--color-border-tertiary);margin:1.5rem 0}
+.kw-row:hover{background:var(--color-background-secondary)}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.num{font-variant-numeric:tabular-nums}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.guide-card{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.1rem;border:.5px solid var(--color-border-tertiary)}
+.guide-card h4{font-size:13px;font-weight:500;margin-bottom:8px}
+.guide-card ul{padding-left:1rem;font-size:12px;line-height:1.8;color:var(--color-text-secondary)}
+.guide-card ul li{color:var(--color-text-primary)}
+.phase-pill{display:inline-block;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.phase-now{background:#FAEEDA;color:#854F0B}
+.phase-prime{background:#FCEBEB;color:#993C1D}
+.summary-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+</style>
+
+<div style="padding:0 0 2rem">
+
+<div class="section">
+<h3>宋慧组合 · 过去7天整体健康度</h3>
+<div class="metric-grid">
+<div class="metric"><div class="metric-label">总花费</div><div class="metric-val num">$1,340</div></div>
+<div class="metric"><div class="metric-label">总销售额</div><div class="metric-val num">$3,595</div></div>
+<div class="metric"><div class="metric-label">整体ACOS</div><div class="metric-val warn num">37.3%</div></div>
+<div class="metric"><div class="metric-label">总订单</div><div class="metric-val num">90单</div></div>
+<div class="metric"><div class="metric-label">整体CTR</div><div class="metric-val bad num">0.085%</div></div>
+<div class="metric"><div class="metric-label">整体CVR</div><div class="metric-val ok num">6.05%</div></div>
+<div class="metric"><div class="metric-label">整体CPC</div><div class="metric-val num">$0.90</div></div>
+<div class="metric"><div class="metric-label">活跃活动数</div><div class="metric-val num">38条</div></div>
+</div>
+<div class="action-box action-amber">
+⚠️ 整体ACOS 37.3%，已逼近盈亏线（38%）。CTR仅0.085%，远低于类目健康基准0.3%，说明流量质量弱、竞争激烈或Listing吸引力不足。CVR 6.05%相对健康，说明到店转化尚可，问题主要在<strong>流量漏斗上游</strong>。结合6月底Prime Day临近（今年移至6月），竞争对手已开始抢量，CPC被动抬升，这是ACOS走高的核心外因。
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+<h2>一、广告活动逐一诊断 + Action Plan</h2>
+
+<table>
+<thead>
+<tr>
+<th style="width:18%">广告活动</th>
+<th style="width:7%">花费$</th>
+<th style="width:7%">销售$</th>
+<th style="width:5%">订单</th>
+<th style="width:8%">ACOS</th>
+<th style="width:8%">CPC$</th>
+<th style="width:8%">CTR</th>
+<th style="width:8%">CVR</th>
+<th style="width:8%">状态</th>
+<th>诊断 + 行动指令</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td><span class="camp-name">31129042-MT-广+词匹配-bamboo-女背七-关键款</span></td>
+<td class="num">332</td><td class="num">1,299</td><td class="num">30</td>
+<td><span class="badge badge-green">25.6%</span></td>
+<td class="num">1.51</td><td class="num">0.11%</td><td class="num">13.6%</td>
+<td><span class="badge badge-teal">主力盈利</span></td>
+<td><div class="action-box action-green">🏆 最优活动。<br>
+Phrase组(ACOS21%)贡献$932销售，核心词：<em>bamboo pjs for women</em>(ACOS4.8%)、<em>nachila bamboo pajamas</em>(ACOS11.3%)、<em>bamboo sleepwear sets</em>(ACOS3.5%)。<br>
+Broad组ACOS36.9%偏高——黑洞词<em>bamboo pajamas for women</em>已烧$69花费+55单点击0转化，立即加否定。<br>
+<strong>行动：</strong>①Phrase组预算+30%，大促前冲量；②Broad组对bamboo pajamas for women加精准否定；③提取高转化词做独立Exact活动卡位</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">31129042-AT-T15</span></td>
+<td class="num">225</td><td class="num">505</td><td class="num">11</td>
+<td><span class="badge badge-amber">44.6%</span></td>
+<td class="num">1.01</td><td class="num">0.06%</td><td class="num">4.9%</td>
+<td><span class="badge badge-amber">高消耗待治理</span></td>
+<td><div class="action-box action-amber">⚠️ 花费第二，ACOS44.6%超标。AT自动活动引流宽泛，大量搜索词0转化（<em>capri pajamas for women set $7.2、womens pajamas $6.1、pajamas for women set $5.5</em>均无转化）。<br>
+CVR仅4.9%，低于组合均值。<br>
+<strong>行动：</strong>①本周立即把Loose Match竞价降低25%，Close Match维持；②0转化词加广泛否定（capri pajamas for women set、womens pajamas等泛词）；③将已出单词<em>womens pajama sets</em>、<em>pjs</em>、<em>yellow summer pajamas</em>迁出独立Exact；④大促期控预算，不主动扩量</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">31129042-MT-BROAD-女背七-class1</span></td>
+<td class="num">200</td><td class="num">398</td><td class="num">9</td>
+<td><span class="badge badge-red">50.2%</span></td>
+<td class="num">1.43</td><td class="num">0.07%</td><td class="num">6.4%</td>
+<td><span class="badge badge-red">严重超标</span></td>
+<td><div class="action-box action-red">🚨 ACOS 50%，花费第三。broad-1组ACOS55.6%，单词<em>nachila bamboo pajamas set</em>烧$16.4花费0转化，<em>bamboo pajamas for women</em>烧$6.9无转化。broad-2组ACOS43.3%亦超标。<br>
+优质词<em>cooling pajamas for women</em>(ACOS22.2%)、<em>bamboo cool pjs women</em>(ACOS4.6%)有出单潜力。<br>
+<strong>行动：</strong>①两组竞价整体降低30%；②黑洞词加精准否定：nachila women's bamboo pajamas set、bamboo pajamas for women；③优质出单词提取做Phrase独立投放；④大促前把此活动预算从$X调至$X×0.6</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">31129042-MT-menopause-精准-女背七-关键款</span></td>
+<td class="num">79</td><td class="num">453</td><td class="num">10</td>
+<td><span class="badge badge-teal">17.4%</span></td>
+<td class="num">0.90</td><td class="num">0.38%</td><td class="num">11.4%</td>
+<td><span class="badge badge-teal">高效明星</span></td>
+<td><div class="action-box action-green">🌟 效率最高活动。CTR 0.38%唯一达标，CVR11.4%优秀。核心词<em>bamboo sleepwear women</em>(ACOS0.7%!)、<em>menopause cooling pajamas</em>(ACOS4.3%)极高价值。<br>
+但<em>pijamas de mujer</em>($7.1无转化)、<em>womens pajama sets</em>($6.2无转化)是无效漏斗——西语词不匹配产品受众。<br>
+<strong>行动：</strong>①预算提升50%，是大促前最值得加码的活动；②pijamas de mujer加精准否定；③新建Exact活动专跑bamboo sleepwear women、menopause cooling pajamas；④保持现有竞价不动，避免扰动</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3836059-MT-关键词-女七分裤-平销</span></td>
+<td class="num">63</td><td class="num">197</td><td class="num">8</td>
+<td><span class="badge badge-green">32.1%</span></td>
+<td class="num">0.29</td><td class="num">0.49%</td><td class="num">3.6%</td>
+<td><span class="badge badge-blue">低CPC高流量</span></td>
+<td><div class="action-box action-blue">📊 CPC仅$0.29，CTR 0.49%，是组合中流量成本最低活动。核心词<em>culottes for women</em>贡献$171/7单，ACOS23.5%。<br>
+但<em>capri pants for women</em>($8.1无转化)、<em>wide leg culottes</em>($6.4无转化)消耗不小。<br>
+<strong>行动：</strong>①capri pants for women、wide leg culottes for women加否定；②culottes词系稳住竞价；③此活动适合大促期维持流量规模，预算保持不变</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">31129042-MT-PHRASE--关键款-女背七</span></td>
+<td class="num">58</td><td class="num">37</td><td class="num">1</td>
+<td><span class="badge badge-red">155%</span></td>
+<td class="num">1.23</td><td class="num">0.04%</td><td class="num">2.1%</td>
+<td><span class="badge badge-red">严重亏损</span></td>
+<td><div class="action-box action-red">🚨 ACOS 155%，严重失血。phrase-2组烧$26.4仅1单$37；phrase-3组$20.6花费0转化0销售；PHRASE-1组$10.8花费0转化。三组合计$58几乎无回报。黑洞词：<em>cooling pajamas for women</em>($7.4)、<em>womens summer pajamas</em>($6.5)。<br>
+<strong>行动：</strong>①phrase-3和PHRASE-1立即暂停；②phrase-2降竞价40%，仅保留有出单词；③此活动有结构性问题，大促前暂停减损，保留预算给menopause和广+词匹配</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3836015/G3929057-at-女短七-下架</span></td>
+<td class="num">42</td><td class="num">72</td><td class="num">2</td>
+<td><span class="badge badge-red">58.5%</span></td>
+<td class="num">0.78</td><td class="num">0.12%</td><td class="num">3.7%</td>
+<td><span class="badge badge-red">下架商品仍在烧钱</span></td>
+<td><div class="action-box action-red">🚨 名称含"下架"，ACOS58.5%。花费$42换$72销售严重亏损。<br>
+<strong>行动：立即暂停此活动</strong>，下架商品持续投广告是无意义消耗</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3913133-AT-结构-短裙-NEW</span></td>
+<td class="num">34</td><td class="num">89</td><td class="num">3</td>
+<td><span class="badge badge-amber">37.8%</span></td>
+<td class="num">0.89</td><td class="num">0.19%</td><td class="num">7.9%</td>
+<td><span class="badge badge-amber">新品潜力词</span></td>
+<td><div class="action-box action-blue">🆕 新品活动，核心词<em>bamboo nightgowns for women</em>(ACOS15.1%，$89/3单)质量极高。但<em>nightgowns for women</em>($8.0无转化)是黑洞。<br>
+<strong>行动：</strong>①nightgowns for women加否定；②bamboo nightgowns词系出单稳定后提竞价，大促前争排名</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3913114 G3833097-MT-吊带睡裙</span></td>
+<td class="num">26</td><td class="num">0</td><td class="num">0</td>
+<td><span class="badge badge-red">∞ 无转化</span></td>
+<td class="num">0.72</td><td class="num">0.30%</td><td class="num">0%</td>
+<td><span class="badge badge-red">纯烧钱</span></td>
+<td><div class="action-box action-red">🚨 花费$26，0销售0转化。核心词<em>bamboo slip</em>($6.1)等Phrase词全部无效。<br>
+<strong>行动：立即暂停</strong>或降竞价至$0.2以下测试，大促前不投</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">31129042-MT-EXACT-cooling-女背七-T15</span></td>
+<td class="num">18</td><td class="num">138</td><td class="num">3</td>
+<td><span class="badge badge-teal">12.9%</span></td>
+<td class="num">1.27</td><td class="num">0.08%</td><td class="num">21.4%</td>
+<td><span class="badge badge-teal">精准高效</span></td>
+<td><div class="action-box action-green">✅ ACOS12.9%，CVR高达21.4%。精准词<em>cooling pajamas for women</em>(ACOS4.5%)极优。<br>
+<strong>行动：</strong>预算提升，大促期跑量，竞价可上调10-15%抢首页</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">31129042-MT-wick-broad-女背七-关键款</span></td>
+<td class="num">7</td><td class="num">132</td><td class="num">3</td>
+<td><span class="badge badge-teal">5.4%</span></td>
+<td class="num">1.20</td><td class="num">0.04%</td><td class="num">50%</td>
+<td><span class="badge badge-teal">ROI之王</span></td>
+<td><div class="action-box action-green">🏆 ACOS仅5.4%，CVR惊人50%（小样本但质量极高）。核心词<em>moisture wicking cooling pajamas</em>和<em>moisture wicking pajama sets women</em>均出单。<br>
+<strong>行动：</strong>①立即大幅增加预算（现在$7花费太少）；②wick词系出单词全部拎出做Exact高竞价活动；③大促期此活动是最值得加码的ROI标杆</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3915088-at/mt-打底裤</span></td>
+<td class="num">44</td><td class="num">103</td><td class="num">5</td>
+<td><span class="badge badge-amber">38-43%</span></td>
+<td class="num">0.46</td><td class="num">0.60%</td><td class="num">7.2%</td>
+<td><span class="badge badge-amber">流量好效率差</span></td>
+<td><div class="action-box action-amber">⚠️ CTR 0.6%是组合最高，但结构2(G3915088-at-2)花费$15.4，0转化是大问题。MT活动ACOS20.3%健康。<br>
+<strong>行动：</strong>①结构2立即排查，暂停或降竞价；②MT活动保持，AT维持现有出价不扩量</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3913026/G3013012/G3913077-at-短睡裙</span></td>
+<td class="num">16</td><td class="num">65</td><td class="num">2</td>
+<td><span class="badge badge-green">23.9%</span></td>
+<td class="num">0.74</td><td class="num">0.01%</td><td class="num">9.5%</td>
+<td><span class="badge badge-blue">健康低消耗</span></td>
+<td><div class="action-box action-green">✅ ACOS23.9%，G3077组出单，G3026组0转化花费$7.4需监控。<br>
+<strong>行动：</strong>暂维持，大促前可小幅加预算测试短睡裙需求</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">G3913080/G3913130-at-女短裙-结构</span></td>
+<td class="num">19</td><td class="num">34</td><td class="num">1</td>
+<td><span class="badge badge-red">54.9%</span></td>
+<td class="num">0.78</td><td class="num">0.02%</td><td class="num">4.2%</td>
+<td><span class="badge badge-red">结构失衡</span></td>
+<td><div class="action-box action-red">❌ G3913080组花费$11.9，0转化，CTR极低0.01%。G3913130有1单但ACOS20%尚可。<br>
+<strong>行动：</strong>G3913080广告组立即暂停，G3913130保留维持低预算</div></td>
+</tr>
+
+<tr>
+<td><span class="camp-name">多个0转化活动（G3829200、G3913113、G3920443、G3933003等）</span></td>
+<td class="num">~83</td><td class="num">0</td><td class="num">0</td>
+<td><span class="badge badge-red">全部∞</span></td>
+<td>—</td><td>—</td><td>0%</td>
+<td><span class="badge badge-red">集体失效</span></td>
+<td><div class="action-box action-red">🚨 G3829200(下架)、G3913113、G3920443、G3933003/G3933028(部分断货)、31129042-MT-sweat-exact、G3829133、G3933061等合计~$83花费，全部0转化。<br>
+<strong>行动：</strong>①下架/断货商品活动立即全暂停；②sweat-exact活动暂停（$13花费0转化）；③G3913113、G3920443降竞价至$0.25等待数据</div></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+<h2>二、黑洞词 TOP10（立即加否定）</h2>
+<table>
+<thead>
+<tr><th>搜索词</th><th>所在活动</th><th>花费$</th><th>点击</th><th>转化</th><th>处理建议</th></tr>
+</thead>
+<tbody>
+<tr><td><em>nachila women's bamboo pajamas set</em></td><td>BROAD-class1 / 广+词匹配</td><td class="num">16.4+25.9</td><td class="num">9+5</td><td class="num">0</td><td><span class="badge badge-red">加精准否定</span></td></tr>
+<tr><td><em>bamboo pajamas for women</em></td><td>广+词匹配(broad)</td><td class="num">21.8</td><td class="num">多次</td><td class="num">0</td><td><span class="badge badge-red">已有转化版本，broad否定</span></td></tr>
+<tr><td><em>capri pants for women</em></td><td>G3836059-PHRASE</td><td class="num">8.1</td><td class="num">28</td><td class="num">0</td><td><span class="badge badge-red">加否定</span></td></tr>
+<tr><td><em>cooling pajamas for women</em></td><td>PHRASE-2</td><td class="num">7.4</td><td class="num">5</td><td class="num">0</td><td><span class="badge badge-amber">BROAD/EXACT有转化，PHRASE否定</span></td></tr>
+<tr><td><em>capri pajamas for women set</em></td><td>AT-T15</td><td class="num">7.2</td><td class="num">7</td><td class="num">0</td><td><span class="badge badge-red">加否定</span></td></tr>
+<tr><td><em>pijamas de mujer</em></td><td>menopause精准</td><td class="num">7.1</td><td class="num">8</td><td class="num">0</td><td><span class="badge badge-red">西语词，精准否定</span></td></tr>
+<tr><td><em>womens pajama sets</em></td><td>menopause / AT-T15</td><td class="num">6.2+7.9</td><td class="num">7+?</td><td class="num">0</td><td><span class="badge badge-amber">AT-T15有1单，menopause否定</span></td></tr>
+<tr><td><em>womens pajamas</em></td><td>AT-T15</td><td class="num">6.1</td><td class="num">6</td><td class="num">0</td><td><span class="badge badge-red">泛词，加否定</span></td></tr>
+<tr><td><em>nightgowns for women</em></td><td>G3913133-AT</td><td class="num">8.0</td><td class="num">8</td><td class="num">0</td><td><span class="badge badge-red">加否定，bamboo nightgowns有效</span></td></tr>
+<tr><td><em>wide leg culottes for women</em></td><td>G3836059-PHRASE</td><td class="num">6.4</td><td class="num">22</td><td class="num">0</td><td><span class="badge badge-red">加否定</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+<h2>三、优质词 TOP10（大促前提升竞价）</h2>
+<table>
+<thead>
+<tr><th>搜索词</th><th>所在活动</th><th>花费$</th><th>销售$</th><th>ACOS</th><th>建议</th></tr>
+</thead>
+<tbody>
+<tr><td><em>bamboo sleepwear women</em></td><td>menopause精准</td><td class="num">0.89</td><td class="num">135.7</td><td><span class="badge badge-teal">0.7%</span></td><td>独立Exact提竞价</td></tr>
+<tr><td><em>bamboo pjs for women</em></td><td>广+词匹配-phrase</td><td class="num">12.2</td><td class="num">254.9</td><td><span class="badge badge-teal">4.8%</span></td><td>大促前提竞价15%</td></tr>
+<tr><td><em>moisture wicking cooling pajamas</em></td><td>wick-broad</td><td class="num">1.2</td><td class="num">41.4</td><td><span class="badge badge-teal">2.9%</span></td><td>独立Exact，大幅提预算</td></tr>
+<tr><td><em>cooling pajamas for women</em></td><td>EXACT-cooling</td><td class="num">4.2</td><td class="num">92.0</td><td><span class="badge badge-teal">4.5%</span></td><td>维持，大促提竞价</td></tr>
+<tr><td><em>nachila women's bamboo pajamas set</em></td><td>广+词匹配-phrase</td><td class="num">25.9</td><td class="num">228.9</td><td><span class="badge badge-green">11.3%</span></td><td>Phrase维持，可建Exact测试</td></tr>
+<tr><td><em>bamboo sleepwear sets</em></td><td>广+词匹配-phrase</td><td class="num">4.8</td><td class="num">138.0</td><td><span class="badge badge-teal">3.5%</span></td><td>提竞价，大促期主攻</td></tr>
+<tr><td><em>menopause cooling pajamas</em></td><td>menopause精准</td><td class="num">3.8</td><td class="num">87.4</td><td><span class="badge badge-teal">4.3%</span></td><td>稳定出单，保持</td></tr>
+<tr><td><em>bamboo pajamas women</em></td><td>广+词匹配-phrase</td><td class="num">3.6</td><td class="num">92.0</td><td><span class="badge badge-teal">3.9%</span></td><td>保持竞价，持续放量</td></tr>
+<tr><td><em>bamboo nightgowns for women</em></td><td>G3913133-AT</td><td class="num">13.4</td><td class="num">89.0</td><td><span class="badge badge-green">15.1%</span></td><td>新品发力，提竞价+预算</td></tr>
+<tr><td><em>culottes for women</em></td><td>G3836059-PHRASE</td><td class="num">40.3</td><td class="num">171.3</td><td><span class="badge badge-green">23.5%</span></td><td>维持低CPC，稳定出量</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+<h2>四、Prime Day大促行动指南</h2>
+
+<div class="guide-grid">
+<div class="guide-card">
+<div class="phase-pill phase-now">立即执行（今天~大促前3天）</div>
+<h4><i class="ti ti-scissors" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>止血操作</h4>
+<ul>
+<li>暂停 PHRASE活动 phrase-3组 + PHRASE-1组</li>
+<li>暂停 G3913114/G3833097-MT-吊带睡裙（0转化$26）</li>
+<li>暂停 G3836015/G3929057-at（下架商品）</li>
+<li>暂停 G3829200/G3929075-at（下架商品）</li>
+<li>暂停 G3933003/G3933028/G3913010 断货低CPC（0转化）</li>
+<li>暂停 G3913080广告组（单独该组，保G3913130）</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="phase-pill phase-now">立即执行（否定词清单）</div>
+<h4><i class="ti ti-ban" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>加精准否定</h4>
+<ul>
+<li>nachila women's bamboo pajamas set → BROAD-class1</li>
+<li>pijamas de mujer → menopause精准活动</li>
+<li>capri pants for women → G3836059 PHRASE</li>
+<li>wide leg culottes for women → G3836059 PHRASE</li>
+<li>capri pajamas for women set → AT-T15</li>
+<li>nightgowns for women → G3913133-AT</li>
+<li>bamboo pajamas for women → BROAD广+词 Broad组</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="phase-pill phase-now">大促前5天（预算重分配）</div>
+<h4><i class="ti ti-trending-up" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>加码优质活动</h4>
+<ul>
+<li>31129042-MT-menopause 预算 × 1.5</li>
+<li>31129042-MT-wick-broad 预算 × 3（严重低曝光）</li>
+<li>31129042-MT-EXACT-cooling 预算 × 1.5 + 竞价+10%</li>
+<li>31129042-MT-广+词匹配(Phrase组) 预算+30%</li>
+<li>新建 bamboo sleepwear women 精准Exact活动</li>
+<li>AT-T15 整体预算冻结，不扩量</li>
+<li>BROAD-class1 竞价整体-30%</li>
+</ul>
+</div>
+<div class="guide-card">
+<div class="phase-pill phase-prime">大促当天（实时监控）</div>
+<h4><i class="ti ti-bolt" aria-hidden="true" style="font-size:14px;margin-right:4px"></i>大促中策略</h4>
+<ul>
+<li>每4小时检查ACOS，核心活动保持&lt;30%</li>
+<li>menopause精准 + wick-broad + EXACT-cooling 全力跑量</li>
+<li>AT-T15如ACOS超50%，当天降Loose Match出价15%</li>
+<li>BROAD-class1 密切监控，超55%直接降预算50%</li>
+<li>G3913133新品活动：关注bamboo nightgowns词转化</li>
+<li>发现新出单词实时记录，大促后建Exact收割</li>
+<li>Dayparting：美东时间20:00-23:00竞价+15%（晚高峰）</li>
+</ul>
+</div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+<h2>五、广告结构健康度评分</h2>
+<table>
+<thead><tr><th>维度</th><th>现状</th><th>评分</th><th>关键问题</th></tr></thead>
+<tbody>
+<tr><td>词路健康度</td><td>优质词稀释于大量黑洞词中</td><td><span class="badge badge-amber">⚡ 中</span></td><td>bamboo sleepwear women仅$0.89花费，应独立放量</td></tr>
+<tr><td>预算利用率</td><td>~$83花费在0转化活动</td><td><span class="badge badge-red">⚠ 低</span></td><td>占总花费6.2%纯损耗，下架/断货应立即清</td></tr>
+<tr><td>匹配类型结构</td><td>Broad/Phrase偏多，Exact不足</td><td><span class="badge badge-amber">⚡ 中</span></td><td>最优词未建Exact活动，错失精准卡位机会</td></tr>
+<tr><td>广告漏斗</td><td>CTR低但CVR尚可</td><td><span class="badge badge-amber">⚡ 中</span></td><td>上漏斗(展示/点击)质量低，Listing主图/标题可优化</td></tr>
+<tr><td>投放节奏</td><td>活动数量过多(38条)，精力分散</td><td><span class="badge badge-amber">⚡ 中</span></td><td>建议收敛至15-18条核心活动，减少管理摩擦</td></tr>
+<tr><td>盈利能力</td><td>整体ACOS 37.3%逼近盈亏线</td><td><span class="badge badge-amber">⚡ 中</span></td><td>关停亏损活动后预计ACOS可降至30-32%</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>

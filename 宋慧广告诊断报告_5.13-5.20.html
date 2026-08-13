@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宋慧广告组合诊断报告 5.13–5.20</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #181b24;
+    --bg3: #1e2130;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8eaf0;
+    --muted: #7a8090;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #2ecc8a;
+    --red: #f05c6a;
+    --yellow: #f5b942;
+    --orange: #f47c3c;
+    --teal: #1dd5b4;
+    --font: 'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.6; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Header */
+  .report-header { border-bottom: 1px solid var(--border2); padding-bottom: 28px; margin-bottom: 36px; }
+  .report-tag { display: inline-block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; background: linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; margin-bottom: 10px; }
+  .report-title { font-size: 28px; font-weight: 700; letter-spacing: -.02em; color: #fff; }
+  .report-sub { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+  /* KPI cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 36px; }
+  .kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .kpi-val { font-size: 22px; font-weight: 700; color: #fff; }
+  .kpi-sub { font-size: 11px; margin-top: 3px; }
+  .ok { color: var(--green); }
+  .warn { color: var(--yellow); }
+  .bad { color: var(--red); }
+
+  /* Section */
+  .section { margin-bottom: 48px; }
+  .section-title { font-size: 16px; font-weight: 700; color: #fff; padding: 10px 16px; background: var(--bg2); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section-num { background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  /* Status badge */
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .badge-green { background: rgba(46,204,138,.15); color: var(--green); border: 1px solid rgba(46,204,138,.3); }
+  .badge-red { background: rgba(240,92,106,.15); color: var(--red); border: 1px solid rgba(240,92,106,.3); }
+  .badge-yellow { background: rgba(245,185,66,.15); color: var(--yellow); border: 1px solid rgba(245,185,66,.3); }
+  .badge-blue { background: rgba(79,142,247,.15); color: var(--accent); border: 1px solid rgba(79,142,247,.3); }
+  .badge-orange { background: rgba(244,124,60,.15); color: var(--orange); border: 1px solid rgba(244,124,60,.3); }
+
+  /* Status overview block */
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .status-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+  .status-block h4 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .status-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .status-row:last-child { border-bottom: none; }
+  .status-label { color: var(--muted); font-size: 13px; }
+  .status-val { font-size: 13px; font-weight: 600; }
+
+  /* Match type chart */
+  .match-bar-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; }
+  .match-bar-wrap h4 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+  .bar-item { margin-bottom: 10px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .bar-label span:first-child { color: var(--text); }
+  .bar-label span:last-child { color: var(--muted); }
+  .bar-track { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width .3s; }
+
+  /* Tables */
+  .tbl-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--bg3); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; padding: 10px 12px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--border2); }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.03); }
+
+  /* Campaign blocks */
+  .camp-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+  .camp-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .camp-name { font-size: 13px; font-weight: 700; color: #fff; font-family: monospace; word-break: break-all; max-width: 55%; }
+  .camp-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .camp-body { padding: 14px 18px; }
+  .camp-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+  .camp-stat { }
+  .camp-stat-label { font-size: 11px; color: var(--muted); }
+  .camp-stat-val { font-size: 15px; font-weight: 700; }
+
+  /* Neg words */
+  .neg-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .neg-tag { background: rgba(240,92,106,.1); border: 1px solid rgba(240,92,106,.25); color: var(--red); font-size: 12px; padding: 3px 9px; border-radius: 4px; font-family: monospace; }
+  .pos-tag { background: rgba(29,213,180,.1); border: 1px solid rgba(29,213,180,.25); color: var(--teal); font-size: 12px; padding: 3px 9px; border-radius: 4px; font-family: monospace; }
+  .action-tag { background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.25); color: var(--accent); font-size: 12px; padding: 3px 9px; border-radius: 4px; }
+
+  /* Diagnosis table */
+  .diag-table th { background: var(--bg); }
+  .diag-table td { font-size: 12px; }
+
+  /* Improvement cards */
+  .imp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .imp-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .imp-card h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
+  .imp-num { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+  .imp-card p { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .imp-card ul { padding-left: 16px; }
+  .imp-card li { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .imp-card li strong { color: var(--text); }
+
+  /* Priority table */
+  .priority-table td:first-child { font-family: monospace; font-size: 12px; color: var(--accent); }
+  .priority-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: middle; }
+  .dot-red { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-green { background: var(--green); }
+
+  .highlight-row td { background: rgba(240,92,106,.07); }
+  .good-row td { background: rgba(46,204,138,.05); }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  .lifecycle-box { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; display: flex; gap: 20px; align-items: flex-start; }
+  .lifecycle-icon { font-size: 32px; }
+  .lifecycle-content h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .lifecycle-content p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  .alert { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; display: flex; gap: 8px; align-items: flex-start; }
+  .alert-red { background: rgba(240,92,106,.1); border: 1px solid rgba(240,92,106,.25); color: #f4a0a8; }
+  .alert-yellow { background: rgba(245,185,66,.1); border: 1px solid rgba(245,185,66,.25); color: #f5c96e; }
+  .alert-green { background: rgba(46,204,138,.1); border: 1px solid rgba(46,204,138,.25); color: #5de8a8; }
+
+  .acos-bar { display: flex; align-items: center; gap: 8px; }
+  .acos-progress { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; min-width: 60px; }
+  .acos-fill { height: 100%; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="report-header">
+  <div class="report-tag">广告诊断报告 · 宋慧组合 · SP/SD/SB全类型</div>
+  <div class="report-title">亚马逊广告投放深度诊断</div>
+  <div class="report-sub">统计周期：2026-05-13 ～ 2026-05-20（7天）&nbsp;｜&nbsp;市场：美国站（US）&nbsp;｜&nbsp;赛道：竹纤维睡衣&nbsp;｜&nbsp;目标ACOS：30%&nbsp;｜&nbsp;目标CVR：8%</div>
+</div>
+
+<!-- KPI 总览 -->
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-label">总花费</div>
+    <div class="kpi-val">$1,387</div>
+    <div class="kpi-sub" style="color:var(--muted)">54个活跃活动</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">总销售额</div>
+    <div class="kpi-val">$5,035</div>
+    <div class="kpi-sub" style="color:var(--muted)">125 单</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">整体 ACOS</div>
+    <div class="kpi-val ok">27.5%</div>
+    <div class="kpi-sub ok">✓ 低于目标30%</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">整体 CVR</div>
+    <div class="kpi-val ok">10.3%</div>
+    <div class="kpi-sub ok">✓ 高于目标8%</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">精准词占比</div>
+    <div class="kpi-val bad">3.1%</div>
+    <div class="kpi-sub bad">⚠ 目标 >50%</div>
+  </div>
+</div>
+
+
+<!-- ========= PART 1 整体现状 ========= -->
+<div class="section">
+  <div class="section-title"><span class="section-num">1</span>整体现状判定</div>
+
+  <div class="lifecycle-box">
+    <div class="lifecycle-icon">⚖️</div>
+    <div class="lifecycle-content">
+      <h3>定性判断：<span class="badge badge-yellow">结构失衡 · 表面达标</span>&nbsp;<span class="badge badge-orange">生命周期：成长期-扩张阶段（存在内耗风险）</span></h3>
+      <p>整体ACOS 27.5%表面上达标，但这一结果由少数高效活动（31129042-at自动、bamboo广泛系列）支撑，
+      掩盖了多个严重亏损活动的真实代价。精准词(EXACT)花费占比仅 <strong style="color:var(--red)">3.1%</strong>，
+      远低于行业健康标准50%以上，说明预算正大量流向泛流量而非高转化精准流量。
+      同时存在多个0转化组（broad-1花费$64、EXACE-2花费$24、G3913133花费$19均0单），以及词组活动整体ACOS达44.9%严重超标。
+      账户处于"广撒网赚眼球"模式，需要立即做结构性收紧。</p>
+    </div>
+  </div>
+
+  <div class="status-grid">
+    <div>
+      <div class="match-bar-wrap">
+        <h4>匹配类型花费结构 vs. 健康基准</h4>
+        <div class="bar-item">
+          <div class="bar-label"><span>自动(-) Auto</span><span style="color:var(--yellow)">39.9% · $484 · CVR 7.7%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:39.9%;background:var(--yellow)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>广泛 Broad</span><span style="color:var(--orange)">28.9% · $350 · CVR 11.7%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:28.9%;background:var(--orange)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>词组 Phrase</span><span style="color:var(--accent)">28.2% · $342 · CVR 6.9%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:28.2%;background:var(--accent)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span style="color:var(--red)">精准 Exact ← 严重不足</span><span style="color:var(--red)">3.1% · $37 · CVR 3.8%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:3.1%;background:var(--red)"></div></div>
+        </div>
+        <div style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border); font-size:11px; color:var(--muted)">
+          健康基准：精准词 &gt;50% · 广泛/词组各≤20% · 自动作探词工具≤15%
+        </div>
+      </div>
+
+      <div class="alert alert-red">
+        <span>🔴</span><span><strong>核心结构问题：</strong>精准词占比3.1%，是健康标准的1/16。Auto流量大（$484）但CVR仅7.7%，正在为不精准关键词支付高点击费用。</span>
+      </div>
+      <div class="alert alert-yellow">
+        <span>🟡</span><span><strong>预算空洞：</strong>31129042-MT-广泛-class1 > broad-1组花费$63.95，7天0单0转化，属于完全无效支出，需立即暂停。</span>
+      </div>
+      <div class="alert alert-yellow">
+        <span>🟡</span><span><strong>下架品仍在跑：</strong>G3836015/G3929057-at-女短七-下架 仍在消耗预算（$34.38/7天），ACOS达42.5%。</span>
+      </div>
+    </div>
+
+    <div class="status-block">
+      <h4>各维度评分</h4>
+      <div class="status-row"><span class="status-label">流量结构</span><span class="status-val bad">失衡 — 精准占比严重不足</span></div>
+      <div class="status-row"><span class="status-label">搜索词质量</span><span class="status-val warn">偏低 — 大量3-8次点击0转化词</span></div>
+      <div class="status-row"><span class="status-label">广告漏斗</span><span class="status-val warn">中上 — CTR均低但整体CVR达标</span></div>
+      <div class="status-row"><span class="status-label">转化效率</span><span class="status-val ok">良好 — 出单活动CVR多超8%</span></div>
+      <div class="status-row"><span class="status-label">预算利用率</span><span class="status-val bad">低效 — 多组预算被无效词消耗</span></div>
+      <div class="status-row"><span class="status-label">投放节奏</span><span class="status-val warn">过度分散 — 37个活动，资源稀释</span></div>
+      <div class="status-row"><span class="status-label">内耗情况</span><span class="status-val bad">严重 — 自动/广泛抢占精准词流量</span></div>
+      <div class="status-row"><span class="status-label">生命周期</span><span class="status-val" style="color:var(--orange)">成长扩张期（有内耗风险）</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========= PART 2 逐活动分析 ========= -->
+<div class="section">
+  <div class="section-title"><span class="section-num">2</span>活动/广告组逐一诊断 · 调整建议</div>
+
+  <!-- ① 31129042-at 自动 ✅ -->
+  <div class="camp-block" style="border-left:3px solid var(--green)">
+    <div class="camp-header">
+      <div class="camp-name">31129042-at（自动）</div>
+      <div class="camp-meta">
+        <span class="badge badge-green">ACOS 23.4%✓</span>
+        <span class="badge badge-green">21单 ✓</span>
+        <span class="badge badge-green">CVR 9.8% ✓</span>
+        <span class="badge badge-blue">花费 $207</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px">广告组：<strong style="color:var(--text)">31129042-AT-女背七-关键款</strong> | 展示28,507 · 点击204 · 19单 · ACOS 24.9% · CVR 9.3%</div>
+      <div class="alert alert-green" style="margin-bottom:8px"><span>✅</span><span>整体表现最佳主力活动。CVR和ACOS均达标，维持现状并持续收割出单词转精准。</span></div>
+      <div style="font-size:12px;color:var(--yellow);margin-bottom:6px">⚠ 需立即否定（3次以上点击0转化）：</div>
+      <div class="neg-list">
+        <span class="neg-tag">capri pajamas for women set（5点击）</span>
+        <span class="neg-tag">pajama sets for women 2 piece（4点击）</span>
+        <span class="neg-tag">summer pajamas for women（4点击）</span>
+        <span class="neg-tag">womens pajama sets（4点击）</span>
+        <span class="neg-tag">pajamas for women（4点击）</span>
+        <span class="neg-tag">summer pjs for women（3点击）</span>
+        <span class="neg-tag">pj sets for woman（3点击）</span>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--teal)">📌 优化Action：将出单词"bamboo capri pajamas""cooling pajamas"等提取到精准活动投放，提高精准占比。</div>
+    </div>
+  </div>
+
+  <!-- ② 31129042-MT-广+词-bamboo ✅ -->
+  <div class="camp-block" style="border-left:3px solid var(--green)">
+    <div class="camp-header">
+      <div class="camp-name">31129042-MT-广+词-bamboo-女背七-关键款</div>
+      <div class="camp-meta">
+        <span class="badge badge-green">ACOS 27.4%✓</span>
+        <span class="badge badge-green">20单 ✓</span>
+        <span class="badge badge-blue">花费 $239</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div class="tbl-wrap" style="margin-bottom:10px">
+        <table>
+          <tr><th>广告组</th><th>花费</th><th>订单</th><th>ACOS</th><th>CVR</th><th>状态</th></tr>
+          <tr class="good-row"><td>31129042-主颜色-bamboo-phrase</td><td>$146</td><td>12单</td><td>28.1%</td><td>13.0%</td><td><span class="badge badge-green">✓ 保持</span></td></tr>
+          <tr class="good-row"><td>31129042-主颜色-bamboo-broad-大词</td><td>$93</td><td>8单</td><td>26.3%</td><td>12.3%</td><td><span class="badge badge-green">✓ 保持</span></td></tr>
+        </table>
+      </div>
+      <div style="font-size:12px;color:var(--yellow);margin-bottom:6px">⚠ 需否定（bamboo-phrase组）：</div>
+      <div class="neg-list">
+        <span class="neg-tag">nachila women's bamboo pajamas set（6点击0单）</span>
+        <span class="neg-tag">bamboo sleepwear women（5点击0单）</span>
+        <span class="neg-tag">women bamboo sleepwear moisture wicking（4点击0单）</span>
+      </div>
+      <div style="font-size:12px;color:var(--yellow);margin-top:8px;margin-bottom:6px">⚠ 需否定（bamboo-broad-大词组）：</div>
+      <div class="neg-list">
+        <span class="neg-tag">bamboo pajamas（5点击0单）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 31129042-MT-广泛-class1 ⚠ 内部分化 -->
+  <div class="camp-block" style="border-left:3px solid var(--orange)">
+    <div class="camp-header">
+      <div class="camp-name">31129042-MT-广泛-女背七-关键款-class1</div>
+      <div class="camp-meta">
+        <span class="badge badge-green">ACOS 27.0%✓</span>
+        <span class="badge badge-green">21单 ✓</span>
+        <span class="badge badge-orange">⚠ 内部分化严重</span>
+        <span class="badge badge-blue">花费 $243</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div class="tbl-wrap" style="margin-bottom:10px">
+        <table>
+          <tr><th>广告组</th><th>花费</th><th>订单</th><th>ACOS</th><th>CVR</th><th>状态</th></tr>
+          <tr class="good-row"><td>31129042-BROAD</td><td>$106</td><td>14单</td><td>17.4%</td><td>19.7%</td><td><span class="badge badge-green">🌟 优质 保持/加预算</span></td></tr>
+          <tr class="good-row"><td>31129042-broad-2</td><td>$72</td><td>7单</td><td>25.1%</td><td>12.3%</td><td><span class="badge badge-green">✓ 保持</span></td></tr>
+          <tr class="highlight-row"><td>31129042-broad-1</td><td>$64</td><td><strong style="color:var(--red)">0单</strong></td><td><strong style="color:var(--red)">N/A</strong></td><td style="color:var(--red)">0%</td><td><span class="badge badge-red">🚨 立即暂停</span></td></tr>
+        </table>
+      </div>
+      <div class="alert alert-red"><span>🚨</span><span><strong>31129042-broad-1：花费$63.95，7天0单！</strong> 这是本期最大预算黑洞之一，需立即暂停并将词表迁移到已验证出单组中重新测试。</span></div>
+      <div style="font-size:12px;color:var(--yellow);margin-top:8px;margin-bottom:6px">⚠ 需否定（broad-1 / BROAD组）：</div>
+      <div class="neg-list">
+        <span class="neg-tag">cooling pajamas for women（3点击0单）</span>
+        <span class="neg-tag">bamboo pajamas for women（3点击出现多次）</span>
+        <span class="neg-tag">womens bamboo pajamas（3点击0单）</span>
+        <span class="neg-tag">summer pajamas for women（3点击0单）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ PHRASE活动 ❌ -->
+  <div class="camp-block" style="border-left:3px solid var(--red)">
+    <div class="camp-header">
+      <div class="camp-name">31129042-MT-PHRASE--关键款-女背七</div>
+      <div class="camp-meta">
+        <span class="badge badge-red">ACOS 44.9%❌</span>
+        <span class="badge badge-yellow">7单</span>
+        <span class="badge badge-blue">花费 $134</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div class="tbl-wrap" style="margin-bottom:10px">
+        <table>
+          <tr><th>广告组</th><th>花费</th><th>订单</th><th>ACOS</th><th>CVR</th><th>建议</th></tr>
+          <tr class="highlight-row"><td>31129042-phrase（主）</td><td>$33</td><td>1单</td><td style="color:var(--red)">71.3%</td><td>3.8%</td><td><span class="badge badge-red">竞价降40% or 暂停</span></td></tr>
+          <tr class="highlight-row"><td>31129042-phrase-2</td><td>$48</td><td>2单</td><td style="color:var(--red)">53.6%</td><td>5.7%</td><td><span class="badge badge-red">竞价降30%</span></td></tr>
+          <tr><td>31129042-phrase-3</td><td>$34</td><td>3单</td><td style="color:var(--green)">27.8%</td><td>11.5%</td><td><span class="badge badge-green">✓ 保持</span></td></tr>
+          <tr class="highlight-row"><td>31129042-PHRASE-1</td><td>$16</td><td>1单</td><td style="color:var(--yellow)">40.7%</td><td>6.2%</td><td><span class="badge badge-yellow">竞价降20%</span></td></tr>
+        </table>
+      </div>
+      <div style="font-size:12px;color:var(--yellow);margin-bottom:6px">⚠ 需否定：</div>
+      <div class="neg-list">
+        <span class="neg-tag">cooling pajamas for women（8点击0单，phrase-2组）</span>
+        <span class="neg-tag">sleeveless pajama set for women（3点击0单）</span>
+        <span class="neg-tag">womens bamboo pajamas set（3点击0单）</span>
+        <span class="neg-tag">bamboo capri pajamas for women（5点击0单，phrase组）</span>
+        <span class="neg-tag">cooling pjs for women night sweats（3点击0单）</span>
+        <span class="neg-tag">nachila pajamas（3点击0单，PHRASE-1组）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 精准活动 ❌ -->
+  <div class="camp-block" style="border-left:3px solid var(--red)">
+    <div class="camp-header">
+      <div class="camp-name">31129042-MT-精准-优化关键款-女背七-T20</div>
+      <div class="camp-meta">
+        <span class="badge badge-red">ACOS 46.0%❌</span>
+        <span class="badge badge-yellow">2单</span>
+        <span class="badge badge-blue">花费 $41</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div class="tbl-wrap" style="margin-bottom:10px">
+        <table>
+          <tr><th>广告组</th><th>花费</th><th>订单</th><th>ACOS</th><th>CVR</th><th>建议</th></tr>
+          <tr class="highlight-row"><td>31129042-EXACE-2-长尾acos</td><td>$23.6</td><td style="color:var(--red)">0单</td><td style="color:var(--red)">N/A</td><td style="color:var(--red)">0%</td><td><span class="badge badge-red">暂停 or 全面降竞价50%</span></td></tr>
+          <tr><td>31129042-exact-已优化</td><td>$13.8</td><td>1单</td><td style="color:var(--green)">31.9%</td><td>10.0%</td><td><span class="badge badge-yellow">竞价降15%</span></td></tr>
+        </table>
+      </div>
+      <div style="font-size:12px;color:var(--yellow);margin-bottom:6px">⚠ EXACE-2 需否定（全部为精准投放仍0转化）：</div>
+      <div class="neg-list">
+        <span class="neg-tag">sleeveless pajamas for women（5点击EXACT，0单）</span>
+        <span class="neg-tag">sleeveless capri pajamas（4点击EXACT，0单）</span>
+        <span class="neg-tag">ladies summer pajamas（3点击EXACT，0单）</span>
+        <span class="neg-tag">sleeveless pajamas（3点击EXACT，0单）</span>
+      </div>
+      <div class="alert alert-red" style="margin-top:8px"><span>🔴</span><span>精准活动CVR 7.1%，低于目标8%，说明Listing转化页面对sleeveless类搜索词匹配度不足，建议检查主图/A+是否展示了无袖款式。</span></div>
+    </div>
+  </div>
+
+  <!-- ⑥ G3829133-AT ✅ -->
+  <div class="camp-block" style="border-left:3px solid var(--yellow)">
+    <div class="camp-header">
+      <div class="camp-name">G3829133-AT-女背七</div>
+      <div class="camp-meta">
+        <span class="badge badge-green">ACOS 29.3%✓</span>
+        <span class="badge badge-yellow">CVR 6.2%⚠</span>
+        <span class="badge badge-blue">花费 $58.5</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:8px">广告组：G3829133-at | 展示11,587 · 点击81 · 5单 · ACOS 28.6% · CVR 6.2%（低于8%目标）</div>
+      <div style="font-size:12px;color:var(--yellow);margin-bottom:6px">⚠ 需否定（G3829133-at组）：</div>
+      <div class="neg-list">
+        <span class="neg-tag">capri pajamas for women set（7点击0单）</span>
+        <span class="neg-tag">cooling pajamas for women（4点击0单）</span>
+        <span class="neg-tag">culottes for women（3点击0单）</span>
+        <span class="neg-tag">latuza pajamas for women（3点击0单）</span>
+        <span class="neg-tag">womens pajama sets（3点击0单）</span>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--teal)">📌 Action：否定无效词后CVR预计提升至9-10%，ACOS可优化至24-26%。</div>
+    </div>
+  </div>
+
+  <!-- ⑦ G3836059 七分裤 ⚠ -->
+  <div class="camp-block" style="border-left:3px solid var(--yellow)">
+    <div class="camp-header">
+      <div class="camp-name">G3836059-MT-关键词-女七分裤-平销</div>
+      <div class="camp-meta">
+        <span class="badge badge-green">ACOS 26.5%✓</span>
+        <span class="badge badge-yellow">CVR 4.4%⚠</span>
+        <span class="badge badge-blue">花费 $59.6</span>
+      </div>
+    </div>
+    <div class="camp-body">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:8px">广告组：G3836059-PHRASE | 点击205 · 9单 · CVR 4.4%（偏低）</div>
+      <div class="alert alert-red" style="margin-bottom:8px"><span>🔴</span><span><strong>culottes for women：124点击 · 花费$33.81 · ACOS 65.9%</strong> — 单词消耗占组总花费59%，严重拖累整体ACOS！需立即降竞价40-50%或做词组内否定。</span></div>
+      <div style="font-size:12px;color:var(--yellow);margin-bottom:6px">⚠ 需否定：</div>
+      <div class="neg-list">
+        <span class="neg-tag">palazzo capri pants for women（8点击0单）</span>
+        <span class="neg-tag">wide leg culottes for women（6点击0单）</span>
+        <span class="neg-tag">capris pants for women（5点击0单）</span>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--teal)">📌 处理"culottes"词后ACOS预计从26.5%降至18-20%，CVR可提升至6-7%。</div>
+    </div>
+  </div>
+
+  <!-- ⑧ 严重问题组 -->
+  <div class="camp-block" style="border-left:3px solid var(--red)">
+    <div class="camp-header">
+      <div class="camp-name">多个 0 转化 / 高 ACOS 活动汇总</div>
+      <div class="camp-meta"><span class="badge badge-red">⚠ 需立即处理</span></div>
+    </div>
+    <div class="camp-body">
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>活动名称</th><th>广告组</th><th>花费</th><th>点击</th><th>订单</th><th>ACOS</th><th>核心问题</th><th>建议</th></tr>
+          <tr class="highlight-row">
+            <td>G3913133-AT-短袖睡裙</td><td>G3913133-at</td><td>$18.84</td><td>25</td><td style="color:var(--red)">0</td><td style="color:var(--red)">N/A</td>
+            <td>高点击0转化，Listing可能存在问题</td><td><span class="badge badge-red">暂停 + 检查Listing</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>G3913113-at-女短裙-结构</td><td>G3913113-at</td><td>$11.73</td><td>17</td><td style="color:var(--red)">0</td><td style="color:var(--red)">N/A</td>
+            <td>nightgowns、bamboo nightgowns 匹配错误</td><td><span class="badge badge-red">暂停 or 否定错配词</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>G3913080 G3913130-at-女短裙-结构</td><td>G3913080</td><td>$14.04</td><td>19</td><td style="color:var(--red)">0</td><td style="color:var(--red)">N/A</td>
+            <td>11.9万展示仅19点击（CTR 0.02%），严重低效</td><td><span class="badge badge-red">暂停 + 排查定向</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>G3915088-at-打底裤-结构</td><td>G3915088-at</td><td>$4.74</td><td>14</td><td style="color:var(--red)">0</td><td style="color:var(--red)">N/A</td>
+            <td>14点击0转化</td><td><span class="badge badge-yellow">降竞价50%</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>31129042-SD-触达-浅蓝-再营销</td><td>-</td><td>$20.27</td><td>60</td><td>1</td><td style="color:var(--red)">44.1%</td>
+            <td>SD再营销CVR 1.7%，极低</td><td><span class="badge badge-yellow">竞价降30%</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>女套-SB_keyword-详情页</td><td>-</td><td>$19.15</td><td>35</td><td>1</td><td style="color:var(--red)">49.0%</td>
+            <td>SB词组CVR 2.9%</td><td><span class="badge badge-yellow">竞价降25%</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>G3836015/G3929057-at-女短七-下架</td><td>G3836015-at + G3929057-AT</td><td>$34.38</td><td>47</td><td>2</td><td style="color:var(--red)">42.5%</td>
+            <td>下架SKU仍在消耗预算</td><td><span class="badge badge-red">立即暂停</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>G3929083-女长套-平销-AT-new</td><td>G3929083-auto</td><td>$16.02</td><td>21</td><td>1</td><td style="color:var(--red)">52.0%</td>
+            <td>平销品ACOS严重超标</td><td><span class="badge badge-red">暂停 or 竞价降50%</span></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>Xnurta AI 31182016-MT-PHRASE</td><td>31182016-MT-PHRASE</td><td>$7.56</td><td>7</td><td style="color:var(--red)">0</td><td style="color:var(--red)">N/A</td>
+            <td>AI托管活动0单</td><td><span class="badge badge-red">暂停</span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========= PART 3 层级诊断表 ========= -->
+<div class="section">
+  <div class="section-title"><span class="section-num">3</span>层级诊断表（宋慧系列）— 活动 → 广告组 → 核心词路</div>
+
+  <div class="tbl-wrap">
+    <table class="diag-table">
+      <tr>
+        <th style="width:18%">广告活动</th>
+        <th style="width:15%">广告组</th>
+        <th style="width:8%">花费</th>
+        <th style="width:7%">ACOS</th>
+        <th style="width:7%">CVR</th>
+        <th style="width:12%">核心词路</th>
+        <th style="width:15%">问题诊断</th>
+        <th style="width:18%">具体 Action</th>
+      </tr>
+      <tr class="good-row">
+        <td>31129042-at（自动）</td>
+        <td>31129042-AT-女背七-关键款</td>
+        <td>$198</td>
+        <td style="color:var(--green)">24.9%</td>
+        <td style="color:var(--green)">9.3%</td>
+        <td>bamboo pajamas / cooling pajamas</td>
+        <td>泛词流量混入，部分词3-5次点击0转化</td>
+        <td>否定7个无效词；出单词提取至精准活动</td>
+      </tr>
+      <tr class="good-row">
+        <td>31129042-MT-广+词-bamboo</td>
+        <td>主颜色-bamboo-phrase</td>
+        <td>$146</td>
+        <td style="color:var(--green)">28.1%</td>
+        <td style="color:var(--green)">13.0%</td>
+        <td>bamboo pajamas for women set</td>
+        <td>3个词组多次点击0转化</td>
+        <td>否定3个无效词；维持竞价</td>
+      </tr>
+      <tr class="good-row">
+        <td>31129042-MT-广+词-bamboo</td>
+        <td>主颜色-bamboo-broad-大词</td>
+        <td>$93</td>
+        <td style="color:var(--green)">26.3%</td>
+        <td style="color:var(--green)">12.3%</td>
+        <td>bamboo pajamas（大词）</td>
+        <td>大词流量泛，需持续监控</td>
+        <td>否定"bamboo pajamas"5点击0单词；添加否定词库</td>
+      </tr>
+      <tr class="good-row">
+        <td>31129042-MT-广泛-class1</td>
+        <td>31129042-BROAD</td>
+        <td>$106</td>
+        <td style="color:var(--green)">17.4%</td>
+        <td style="color:var(--green)">19.7%</td>
+        <td>bamboo / cooling pajamas</td>
+        <td>优质组，CVR最高</td>
+        <td>可小幅加预算10-15%；持续否定泛词</td>
+      </tr>
+      <tr>
+        <td>31129042-MT-广泛-class1</td>
+        <td>31129042-broad-2</td>
+        <td>$72</td>
+        <td style="color:var(--green)">25.1%</td>
+        <td style="color:var(--green)">12.3%</td>
+        <td>women pajama set bamboo</td>
+        <td>表现稳定，小幅内耗自动组</td>
+        <td>维持现状；添加与自动组互相否定</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>31129042-MT-广泛-class1</td>
+        <td>31129042-broad-1</td>
+        <td style="color:var(--red)">$64</td>
+        <td style="color:var(--red)">N/A</td>
+        <td style="color:var(--red)">0%</td>
+        <td>cooling / bamboo pajamas</td>
+        <td>7天0单，完全无效，预算黑洞</td>
+        <td>🚨 立即暂停；词表移至broad-2重新测试</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>31129042-MT-PHRASE--关键款</td>
+        <td>31129042-phrase（主）</td>
+        <td>$33</td>
+        <td style="color:var(--red)">71.3%</td>
+        <td>3.8%</td>
+        <td>bamboo capri pajamas for women</td>
+        <td>ACOS严重超标，CVR极低</td>
+        <td>竞价降40%；否定6个无效词</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>31129042-MT-PHRASE--关键款</td>
+        <td>31129042-phrase-2</td>
+        <td>$48</td>
+        <td style="color:var(--red)">53.6%</td>
+        <td>5.7%</td>
+        <td>cooling pajamas / sleeveless pajama</td>
+        <td>冷却类词不出单，拉高ACOS</td>
+        <td>否定cooling系列词；竞价降30%</td>
+      </tr>
+      <tr>
+        <td>31129042-MT-PHRASE--关键款</td>
+        <td>31129042-phrase-3</td>
+        <td>$34</td>
+        <td style="color:var(--green)">27.8%</td>
+        <td style="color:var(--green)">11.5%</td>
+        <td>bamboo pajama set women</td>
+        <td>组内唯一达标组</td>
+        <td>维持；挖掘出单词提取精准</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>31129042-MT-PHRASE--关键款</td>
+        <td>31129042-PHRASE-1</td>
+        <td>$16</td>
+        <td style="color:var(--yellow)">40.7%</td>
+        <td>6.2%</td>
+        <td>nachila pajamas / bamboo PJ</td>
+        <td>品牌词nachila效率偏低</td>
+        <td>竞价降20%；品牌词移至品牌活动</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>31129042-MT-精准-T20</td>
+        <td>31129042-EXACE-2-长尾acos</td>
+        <td style="color:var(--red)">$24</td>
+        <td style="color:var(--red)">N/A</td>
+        <td style="color:var(--red)">0%</td>
+        <td>sleeveless pajamas（精准）</td>
+        <td>精准词0转化，sleeveless与Listing不符</td>
+        <td>🚨 暂停；核查Listing是否有无袖款</td>
+      </tr>
+      <tr>
+        <td>31129042-MT-精准-T20</td>
+        <td>31129042-exact-已优化</td>
+        <td>$14</td>
+        <td style="color:var(--yellow)">31.9%</td>
+        <td style="color:var(--green)">10.0%</td>
+        <td>bamboo cooling pajamas（精准）</td>
+        <td>勉强超标，可继续优化</td>
+        <td>竞价降10-15%；增加精准词数量</td>
+      </tr>
+      <tr>
+        <td>G3829133-AT-女背七</td>
+        <td>G3829133-at</td>
+        <td>$57</td>
+        <td style="color:var(--green)">28.6%</td>
+        <td style="color:var(--yellow)">6.2%</td>
+        <td>bamboo capri / culottes 混入</td>
+        <td>CVR偏低，有无效词混入</td>
+        <td>否定5个无效词；提升精准词竞价</td>
+      </tr>
+      <tr>
+        <td>G3836059-MT-七分裤-平销</td>
+        <td>G3836059-PHRASE</td>
+        <td>$57</td>
+        <td style="color:var(--green)">25.3%</td>
+        <td style="color:var(--yellow)">4.4%</td>
+        <td>culottes（65.9% ACOS）</td>
+        <td>单词culottes消耗59%预算却ACOS65%</td>
+        <td>culottes词降竞价50%；否定palazzo/wide-leg等</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>G3836015/G3929057-at-下架</td>
+        <td>G3836015-at / G3929057-AT</td>
+        <td style="color:var(--red)">$34</td>
+        <td style="color:var(--red)">42.5%</td>
+        <td>4.3%</td>
+        <td>pajamas for women set</td>
+        <td>下架SKU仍在烧钱</td>
+        <td>🚨 立即全部暂停</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>G3913133-AT-短袖睡裙</td>
+        <td>G3913133-at</td>
+        <td style="color:var(--red)">$19</td>
+        <td style="color:var(--red)">N/A</td>
+        <td style="color:var(--red)">0%</td>
+        <td>nightgown / bamboo nightgown</td>
+        <td>25次点击全0转化，词路不符</td>
+        <td>暂停；检查Listing与词路匹配度</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>G3913113-at-女短裙-结构</td>
+        <td>G3913113-at</td>
+        <td style="color:var(--red)">$12</td>
+        <td style="color:var(--red)">N/A</td>
+        <td style="color:var(--red)">0%</td>
+        <td>nightgowns for women（6点击）</td>
+        <td>睡裙词路错投短裙组</td>
+        <td>否定nightgown类词；重新设置定向</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>G3913080 G3913130-at-结构</td>
+        <td>G3913080 / G3913130-AT</td>
+        <td style="color:var(--red)">$14</td>
+        <td style="color:var(--red)">N/A</td>
+        <td style="color:var(--red)">0%</td>
+        <td>Auto定向未知</td>
+        <td>119,974展示仅19点击（CTR 0.02%），极端低效</td>
+        <td>🚨 立即暂停；CTR过低说明出价极低或定向错误</td>
+      </tr>
+      <tr>
+        <td>G3920443-at-吊带短裤</td>
+        <td>G3920443</td>
+        <td>$17</td>
+        <td style="color:var(--green)">11.5%</td>
+        <td style="color:var(--green)">14.8%</td>
+        <td>shorts pajamas / tank top PJ</td>
+        <td>表现优秀</td>
+        <td>可加预算20%；挖出单词做精准</td>
+      </tr>
+      <tr>
+        <td>G3920438-at-吊带短裤-NEW</td>
+        <td>G3920438-at</td>
+        <td>$10</td>
+        <td style="color:var(--green)">13.1%</td>
+        <td style="color:var(--green)">13.3%</td>
+        <td>-（Auto）</td>
+        <td>高效新品活动</td>
+        <td>可加预算30%；加速拿词</td>
+      </tr>
+      <tr>
+        <td>G3933061-AT</td>
+        <td>G3933061-AT</td>
+        <td>$2.87</td>
+        <td style="color:var(--green)">7.8%</td>
+        <td style="color:var(--green)">28.6%</td>
+        <td>-（Auto，低消）</td>
+        <td>ACOS极低，预算只有$5.55</td>
+        <td>加预算至$15/天</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>G3929083-女长套-平销-AT</td>
+        <td>G3929083-auto</td>
+        <td>$16</td>
+        <td style="color:var(--red)">52.0%</td>
+        <td>4.8%</td>
+        <td>bamboo pajamas for women（6点击0单）</td>
+        <td>平销品ACOS严重超标</td>
+        <td>竞价降50%或暂停；否定bamboo pajamas for women</td>
+      </tr>
+      <tr class="highlight-row">
+        <td>Xnurta AI 31182016-MT-PHRASE</td>
+        <td>31182016-MT-PHRASE</td>
+        <td>$7.56</td>
+        <td style="color:var(--red)">N/A</td>
+        <td style="color:var(--red)">0%</td>
+        <td>AI托管词组</td>
+        <td>7点击0转化，AI托管无效</td>
+        <td>🚨 立即暂停</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+<!-- ========= PART 4 结构化改进建议 ========= -->
+<div class="section">
+  <div class="section-title"><span class="section-num">4</span>结构化改进建议 · 精准到广告组的执行计划</div>
+
+  <!-- 优先级矩阵 -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px">⚡ 立即行动优先级矩阵（本周内完成）</div>
+    <div class="tbl-wrap">
+      <table class="priority-table">
+        <tr><th>优先级</th><th>广告组</th><th>具体动作</th><th>预期效果</th><th>预计节省/收益</th></tr>
+        <tr>
+          <td><span class="priority-dot dot-red"></span>P0 今日</td>
+          <td>31129042-broad-1</td>
+          <td>立即暂停；词表移至broad-2测试</td>
+          <td>止血$9/天无效支出</td>
+          <td>节省$64/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-red"></span>P0 今日</td>
+          <td>G3836015-at + G3929057-AT（下架活动）</td>
+          <td>立即暂停整个活动</td>
+          <td>止血下架品消耗</td>
+          <td>节省$34/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-red"></span>P0 今日</td>
+          <td>G3913080 / G3913130-AT</td>
+          <td>立即暂停（CTR 0.02%）</td>
+          <td>释放$14/周无效预算</td>
+          <td>节省$14/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-red"></span>P0 今日</td>
+          <td>31129042-EXACE-2-长尾acos</td>
+          <td>暂停或降竞价50%</td>
+          <td>精准词止血</td>
+          <td>节省$24/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-yellow"></span>P1 本周</td>
+          <td>31129042-AT-女背七-关键款</td>
+          <td>否定7个无效词（见上表）</td>
+          <td>CVR从9.3%→11%+</td>
+          <td>节省$15-20/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-yellow"></span>P1 本周</td>
+          <td>31129042-phrase（主）</td>
+          <td>竞价降40%；否定6个词</td>
+          <td>ACOS从71%→30%以下</td>
+          <td>节省$20+/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-yellow"></span>P1 本周</td>
+          <td>G3836059-PHRASE</td>
+          <td>"culottes"词降竞价50%；否定3词</td>
+          <td>ACOS从26.5%→18%</td>
+          <td>释放$17/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-yellow"></span>P1 本周</td>
+          <td>G3913133-at（短袖睡裙）</td>
+          <td>暂停 + 检查Listing</td>
+          <td>止血$19/周0转化支出</td>
+          <td>节省$19/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-yellow"></span>P1 本周</td>
+          <td>G3929083-auto</td>
+          <td>竞价降50%</td>
+          <td>ACOS从52%→25-30%</td>
+          <td>改善$8/周效率</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-green"></span>P2 下周</td>
+          <td>31129042-exact-已优化</td>
+          <td>增加10-15个精准词；竞价降10%</td>
+          <td>精准占比从3.1%→8%+</td>
+          <td>提升精准权重</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-green"></span>P2 下周</td>
+          <td>G3920443-at / G3920438-at</td>
+          <td>预算提升20-30%</td>
+          <td>高效活动扩量</td>
+          <td>预期增加5-8单/周</td>
+        </tr>
+        <tr>
+          <td><span class="priority-dot dot-green"></span>P2 下周</td>
+          <td>G3933061-AT</td>
+          <td>预算从$5.55→$15/天</td>
+          <td>ACOS 7.8%活动扩量</td>
+          <td>预期增加3-5单/周</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="imp-grid">
+    <!-- 建议1 -->
+    <div class="imp-card" style="border-color:rgba(240,92,106,.3)">
+      <h4><span class="imp-num" style="background:var(--red);color:#fff">1</span>精准词占比提升计划（目标：3.1% → 50%+）</h4>
+      <ul>
+        <li><strong>立即行动：</strong>从31129042-AT-女背七-关键款（自动组）中提取已出单词，批量添加至精准活动</li>
+        <li><strong>本周：</strong>创建新精准活动，将G3836059-PHRASE的高CVR词（如"bamboo capri pants women"）以精准匹配单独投放</li>
+        <li><strong>持续：</strong>每周从出单自动组提取词，新增精准词目标每周+20个</li>
+        <li><strong>结构目标：</strong>自动≤20% · 广泛≤15% · 词组≤15% · 精准≥50%</li>
+      </ul>
+    </div>
+
+    <!-- 建议2 -->
+    <div class="imp-card" style="border-color:rgba(245,185,66,.3)">
+      <h4><span class="imp-num" style="background:var(--yellow);color:#000">2</span>内耗治理：跨活动否定词库建设</h4>
+      <ul>
+        <li><strong>问题：</strong>自动组、广泛组、词组活动之间没有互相否定，同一搜索词在多个活动竞价，相互抬价</li>
+        <li><strong>行动：</strong>创建"宋慧-精准专属词否定列表"，在自动+广泛活动中否定所有精准词</li>
+        <li><strong>行动：</strong>在精准活动中否定广泛词，防止精准词被广泛匹配抢流量</li>
+        <li><strong>工具：</strong>建立Excel否定词库，每周同步更新到账户</li>
+      </ul>
+    </div>
+
+    <!-- 建议3 -->
+    <div class="imp-card" style="border-color:rgba(79,142,247,.3)">
+      <h4><span class="imp-num" style="background:var(--accent);color:#fff">3</span>预算再分配方案（总预算不变）</h4>
+      <ul>
+        <li><strong>削减（每周节省约$150）：</strong></li>
+        <li>暂停：broad-1($64) · 下架活动($34) · G3913080($14) · EXACE-2($24) · G3913133($19)</li>
+        <li><strong>增加：</strong></li>
+        <li>G3920443-at吊带短裤 +$20/周（ACOS 11.5%，回报高）</li>
+        <li>31129042-BROAD组 +$15/周（ACOS 17.4%，CVR 19.7%）</li>
+        <li>G3933061-AT +$35/周（ACOS 7.8%，极高效率）</li>
+        <li>新建精准活动 +$80/周（提升精准占比）</li>
+      </ul>
+    </div>
+
+    <!-- 建议4 -->
+    <div class="imp-card" style="border-color:rgba(29,213,180,.3)">
+      <h4><span class="imp-num" style="background:var(--teal);color:#000">4</span>活动精简 + 生命周期管理</h4>
+      <ul>
+        <li><strong>立即暂停（本期0表现 + 下架品）：</strong>7个活动（见P0列表）</li>
+        <li><strong>合并建议：</strong>31129042-PHRASE系列4个广告组建议合并为2个（保留phrase-3 + PHRASE-1，其余降价整合）</li>
+        <li><strong>归档：</strong>超过30天没产出且已PAUSED的活动统一归档清理，避免账户结构混乱</li>
+        <li><strong>生命周期标签：</strong>建议活动命名加入状态标签，如"-Active" "-测试" "-退出"，方便快速识别</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 最终目标 -->
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:20px 24px;margin-top:20px;">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px">🎯 2周优化后预期目标</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+      <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:8px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">整体 ACOS</div>
+        <div style="font-size:18px;font-weight:700;color:var(--green)">23–25%</div>
+        <div style="font-size:11px;color:var(--muted)">当前 27.5%</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:8px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">精准词占比</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent)">≥25%</div>
+        <div style="font-size:11px;color:var(--muted)">当前 3.1%</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:8px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">无效支出</div>
+        <div style="font-size:18px;font-weight:700;color:var(--green)">节省$150+/周</div>
+        <div style="font-size:11px;color:var(--muted)">释放预算再投入</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:var(--bg3);border-radius:8px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">周订单量</div>
+        <div style="font-size:18px;font-weight:700;color:var(--teal)">140–155单</div>
+        <div style="font-size:11px;color:var(--muted)">当前 125单</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;padding:14px 16px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);font-size:12px;color:var(--muted)">
+    <strong style="color:var(--text)">报告说明：</strong>本报告基于5.13-5.20（7天）搜索词报告（813条数据）与广告活动概览表（498行，全为宋慧组合）交叉分析生成。行业基准：目标ACOS 30%，目标CVR 8%。所有金额单位为USD。建议执行前请在后台二次确认当前竞价与预算状态。
+  </div>
+</div>
+
+</div>
+</body>
+</html>

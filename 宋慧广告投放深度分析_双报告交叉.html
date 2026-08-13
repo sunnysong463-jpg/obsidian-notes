@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>宋慧广告投放深度分析 · 双报告交叉 5.14-5.20</title>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#2d333b;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#c9d1d9;--text2:#8b949e;--text3:#6e7681;
+  --blue:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;
+  --orange:#e3b341;--purple:#bc8cff;--teal:#39d353;--cyan:#76e3ea;
+  --font:'PingFang SC','Microsoft YaHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;line-height:1.6}
+.wrap{max-width:1200px;margin:0 auto;padding:36px 20px 80px}
+
+/* Header */
+.hdr{padding-bottom:24px;margin-bottom:32px;border-bottom:1px solid var(--border2)}
+.hdr-tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:8px}
+.hdr-title{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em}
+.hdr-sub{font-size:12px;color:var(--text2);margin-top:5px}
+
+/* Section titles */
+.sec-hd{display:flex;align-items:center;gap:10px;margin:36px 0 16px;padding:8px 14px;background:var(--bg2);border-left:3px solid var(--blue);border-radius:0 6px 6px 0}
+.sec-hd .num{width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-hd h2{font-size:14px;font-weight:600;color:#fff}
+.sec-hd small{font-size:11px;color:var(--text2);margin-left:4px}
+
+/* KPI strip */
+.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:24px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.kpi .val{font-size:20px;font-weight:700;color:#fff}
+.kpi .sub{font-size:10px;margin-top:2px}
+.ok{color:var(--green)} .warn{color:var(--orange)} .bad{color:var(--red)} .info{color:var(--blue)}
+
+/* Badges */
+.b{display:inline-block;font-size:10px;font-weight:600;padding:1px 7px;border-radius:4px;white-space:nowrap}
+.b-green{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3)}
+.b-red{background:rgba(248,81,73,.15);color:#f85149;border:1px solid rgba(248,81,73,.3)}
+.b-yellow{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
+.b-blue{background:rgba(88,166,255,.15);color:#58a6ff;border:1px solid rgba(88,166,255,.3)}
+.b-purple{background:rgba(188,140,255,.15);color:#bc8cff;border:1px solid rgba(188,140,255,.3)}
+.b-cyan{background:rgba(118,227,234,.15);color:#76e3ea;border:1px solid rgba(118,227,234,.3)}
+.b-orange{background:rgba(227,179,65,.15);color:#e3b341;border:1px solid rgba(227,179,65,.3)}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border);margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--bg3);color:var(--text2);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:9px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border2)}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.mono{font-family:monospace;font-size:11px;color:var(--blue)}
+.r{text-align:right}
+
+/* Row highlights */
+.row-red td{background:rgba(248,81,73,.07)}
+.row-green td{background:rgba(63,185,80,.07)}
+.row-yellow td{background:rgba(210,153,34,.07)}
+.row-purple td{background:rgba(188,140,255,.07)}
+
+/* Progress bar inline */
+.bar{display:inline-flex;align-items:center;gap:5px;width:100%}
+.bar-track{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;min-width:40px}
+.bar-fill{height:100%;border-radius:3px}
+.bar-val{font-size:11px;font-weight:600;min-width:36px;text-align:right}
+
+/* Alert boxes */
+.alert{padding:9px 13px;border-radius:6px;font-size:12px;margin-bottom:10px;display:flex;gap:8px;line-height:1.6}
+.a-red{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.25);color:#fca5a5}
+.a-yellow{background:rgba(210,153,34,.1);border:1px solid rgba(210,153,34,.25);color:#fcd34d}
+.a-green{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.25);color:#86efac}
+.a-blue{background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);color:#93c5fd}
+
+/* Two columns */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.card h4{font-size:12px;font-weight:600;color:#fff;margin-bottom:10px}
+.card .row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+.card .row:last-child{border-bottom:none}
+.card .row .l{color:var(--text2)}
+
+/* Keyword tags */
+.kw-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.kw{font-size:11px;font-family:monospace;padding:2px 8px;border-radius:4px}
+.kw-red{background:rgba(248,81,73,.12);color:#f85149;border:1px solid rgba(248,81,73,.25)}
+.kw-green{background:rgba(63,185,80,.12);color:#3fb950;border:1px solid rgba(63,185,80,.25)}
+.kw-yellow{background:rgba(210,153,34,.12);color:#d29922;border:1px solid rgba(210,153,34,.25)}
+.kw-blue{background:rgba(88,166,255,.12);color:#58a6ff;border:1px solid rgba(88,166,255,.25)}
+.kw-purple{background:rgba(188,140,255,.12);color:#bc8cff;border:1px solid rgba(188,140,255,.25)}
+
+/* Number style helper */
+.num-r{color:var(--red);font-weight:600}
+.num-g{color:var(--green);font-weight:600}
+.num-y{color:var(--orange);font-weight:600}
+.num-b{color:var(--blue);font-weight:600}
+
+/* Section sub-label */
+.sub-lbl{font-size:11px;color:var(--text2);margin-bottom:10px;padding:0 2px}
+
+/* Divider */
+.div{height:1px;background:var(--border);margin:20px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-tag">双报告深度交叉分析 · 搜索词 × 投放词 · 宋慧广告组合</div>
+  <div class="hdr-title">广告投放词精细化诊断报告</div>
+  <div class="hdr-sub">统计周期：2026-05-14 ～ 2026-05-20（7天）｜ 总投放词条目：576行 ｜ 有效花费词：167条 ｜ 目标 ACOS ≤30% · CVR ≥8% · 精准占比 ≥50%</div>
+</div>
+
+<!-- KPI总览 -->
+<div class="kpi-row">
+  <div class="kpi"><div class="lbl">总花费</div><div class="val">$1,387</div><div class="sub" style="color:var(--text2)">54个活跃活动</div></div>
+  <div class="kpi"><div class="lbl">总销售额</div><div class="val">$5,035</div><div class="sub" style="color:var(--text2)">125 单</div></div>
+  <div class="kpi"><div class="lbl">整体ACOS</div><div class="val ok">27.5%</div><div class="sub ok">✓ 低于30%目标</div></div>
+  <div class="kpi"><div class="lbl">整体CVR</div><div class="val ok">10.3%</div><div class="sub ok">✓ 高于8%目标</div></div>
+  <div class="kpi"><div class="lbl">精准词占比</div><div class="val bad">3.1%</div><div class="sub bad">⚠ 目标&gt;50%</div></div>
+  <div class="kpi"><div class="lbl">无效花费(0单词)</div><div class="val bad">~$250</div><div class="sub bad">占总花费18%</div></div>
+  <div class="kpi"><div class="lbl">待升精准词数</div><div class="val info">15+</div><div class="sub info">CVR≥10%高价值词</div></div>
+</div>
+
+
+<!-- ====== TABLE 1: 自动流量类型分解 ====== -->
+<div class="sec-hd"><span class="num">1</span><h2>自动流量（AT）类型深度拆解</h2><small>—— 找到close-match的隐患</small></div>
+
+<div class="alert a-red">
+  <span>🔴</span>
+  <span><strong>核心发现：close-match（近似匹配）花费$220，ACOS高达38.2%，CVR仅5.6%，是自动流量最大的低效源头。</strong>它与substitutes体量相当，但ACOS高出16个百分点，CVR低3%，正在大量消耗预算却带来低质转化。需要在自动活动的"竞价调整"中单独压低close-match出价。</span>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>自动流量类型</th><th>花费(USD)</th><th>花费占比</th><th>花费分布</th><th>点击量</th><th>订单</th><th>ACOS</th><th>CVR</th><th>CPC均值</th><th>诊断</th><th>Action</th>
+  </tr></thead>
+  <tbody>
+    <tr class="row-yellow">
+      <td><strong>keyword-group</strong><br><span style="font-size:10px;color:var(--text2)">关键词组（最精准）</span></td>
+      <td class="r num-g">$44.44</td>
+      <td class="r">8.8%</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:8.8%;background:#3fb950"></div></div></div></td>
+      <td class="r">52</td><td class="r num-g">7</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:13.5%;background:#3fb950"></div></div><span class="bar-val num-g">13.5%</span></div></td>
+      <td class="r num-g">13.5%</td>
+      <td class="r">$0.85</td>
+      <td><span class="b b-green">🌟 最高效</span></td>
+      <td style="color:#86efac">大幅加预算<br>调高keyword-group竞价</td>
+    </tr>
+    <tr class="row-green">
+      <td><strong>substitutes</strong><br><span style="font-size:10px;color:var(--text2)">替代品（竞品浏览者）</span></td>
+      <td class="r num-g">$217.97</td>
+      <td class="r">43.3%</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:43.3%;background:#58a6ff"></div></div></div></td>
+      <td class="r">281</td><td class="r num-g">24</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:22.8%;background:#3fb950"></div></div><span class="bar-val num-g">22.8%</span></div></td>
+      <td class="r num-g">8.5%</td>
+      <td class="r">$0.78</td>
+      <td><span class="b b-green">✓ 达标</span></td>
+      <td style="color:#86efac">维持现竞价<br>持续出单词提精准</td>
+    </tr>
+    <tr class="row-red">
+      <td><strong>close-match</strong><br><span style="font-size:10px;color:var(--text2)">近似匹配（宽泛流量）</span></td>
+      <td class="r num-r">$219.94</td>
+      <td class="r">43.7%</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:43.7%;background:#f85149"></div></div></div></td>
+      <td class="r">266</td><td class="r num-y">15</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:38.2%;background:#f85149"></div></div><span class="bar-val num-r">38.2%</span></div></td>
+      <td class="r num-r">5.6%</td>
+      <td class="r">$0.83</td>
+      <td><span class="b b-red">⚠ 超标</span></td>
+      <td style="color:#fca5a5">单独降close-match竞价<br>至substitutes的70%</td>
+    </tr>
+    <tr>
+      <td><strong>SD商品投放</strong><br><span style="font-size:10px;color:var(--text2)">品类/商品定向</span></td>
+      <td class="r">$1.50</td><td class="r">0.3%</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:0.3%;background:#bc8cff"></div></div></div></td>
+      <td class="r">2</td><td class="r">1</td>
+      <td><div class="bar"><div class="bar-track"><div class="bar-fill" style="width:4.3%;background:#3fb950"></div></div><span class="bar-val num-g">4.3%</span></div></td>
+      <td class="r num-g">50.0%</td>
+      <td class="r">$0.75</td>
+      <td><span class="b b-green">✓ 极高效</span></td>
+      <td style="color:#86efac">可扩大商品定向规模</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="alert a-blue">
+  <span>💡</span>
+  <span><strong>运营洞察：</strong>自动活动中，keyword-group ACOS仅13.5%却只占花费8.8%，属于被严重低估的流量类型。
+  建议在后台"自动广告竞价调整"中，将keyword-group竞价提高20-30%，同时将close-match降低20-25%，在不增加总预算的前提下优化流量结构，预计整体ACOS可从27.5%降至22-24%。</span>
+</div>
+
+
+<!-- ====== TABLE 2: 主要广告组投放词全景表 ====== -->
+<div class="sec-hd"><span class="num">2</span><h2>核心广告组投放词全景表</h2><small>—— 花费≥$5，含ACOS/CVR判断</small></div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>广告活动</th><th>广告组</th><th>投放词/定向</th><th>类型</th><th>花费</th><th>点击</th><th>订单</th>
+    <th>ACOS</th><th>CVR</th><th>CPC</th><th>综合评级</th><th>建议动作</th>
+  </tr></thead>
+  <tbody>
+    <!-- 31129042-at 自动 -->
+    <tr class="row-green">
+      <td class="mono" rowspan="2">31129042-at<br>（自动）</td>
+      <td rowspan="2">AT-女背七-关键款</td>
+      <td>substitutes（替代品流量）</td>
+      <td><span class="b b-blue">自动-替代</span></td>
+      <td class="r num-g">$118.03</td><td class="r">126</td><td class="r num-g">15</td>
+      <td><span class="num-g">18.1%</span></td><td class="r num-g">11.9%</td><td class="r">$0.94</td>
+      <td><span class="b b-green">🌟 优质</span></td>
+      <td>维持；提高substitutes竞价5%</td>
+    </tr>
+    <tr class="row-red">
+      <td>close-match（近似流量）</td>
+      <td><span class="b b-red">自动-近似</span></td>
+      <td class="r num-r">$89.08</td><td class="r">88</td><td class="r">6</td>
+      <td><span class="num-r">38.3%</span></td><td class="r num-r">6.8%</td><td class="r">$1.01</td>
+      <td><span class="b b-red">⚠ 超标</span></td>
+      <td>close-match竞价降20-25%</td>
+    </tr>
+
+    <!-- bamboo phrase -->
+    <tr class="row-green">
+      <td class="mono" rowspan="5">bamboo<br>-女背七</td>
+      <td rowspan="3">bamboo-phrase</td>
+      <td>bamboo pajama for women <span class="b b-green">⭐主词</span></td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-g">$56.14</td><td class="r">34</td><td class="r num-g">7</td>
+      <td><span class="num-g">18.0%</span></td><td class="r num-g">20.6%</td><td class="r">$1.65</td>
+      <td><span class="b b-green">🌟 明星词</span></td>
+      <td>立即升精准；竞价可提15%</td>
+    </tr>
+    <tr class="row-green">
+      <td>bamboo+pajamas</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r">$31.09</td><td class="r">21</td><td class="r">3</td>
+      <td><span class="num-g">22.5%</span></td><td class="r num-g">14.3%</td><td class="r">$1.48</td>
+      <td><span class="b b-green">✓ 良好</span></td>
+      <td>建精准组投放</td>
+    </tr>
+    <tr class="row-red">
+      <td>women's bamboo pajamas set</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-r">$16.08</td><td class="r">10</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.61</td>
+      <td><span class="b b-red">❌ 无效</span></td>
+      <td>词组内否定此词</td>
+    </tr>
+    <tr class="row-red">
+      <td rowspan="2">bamboo-broad-大词</td>
+      <td>bamboo+pajamas</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r">$37.94</td><td class="r">26</td><td class="r">2</td>
+      <td><span class="num-y">41.5%</span></td><td class="r">7.7%</td><td class="r">$1.46</td>
+      <td><span class="b b-yellow">⚠ 偏高</span></td>
+      <td>竞价降20%；关注后续</td>
+    </tr>
+    <tr class="row-green">
+      <td>bamboo capri pajamas</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r">$24.28</td><td class="r">17</td><td class="r">2</td>
+      <td><span class="num-g">28.8%</span></td><td class="r num-g">11.8%</td><td class="r">$1.43</td>
+      <td><span class="b b-green">✓ 良好</span></td>
+      <td>升精准词单独投放</td>
+    </tr>
+
+    <!-- broad class1 -->
+    <tr class="row-green">
+      <td class="mono" rowspan="8">广泛<br>-class1</td>
+      <td rowspan="4">BROAD组</td>
+      <td>cooling pajamas <span class="b b-green">⭐CVR50%</span></td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r num-g">$20.03</td><td class="r">14</td><td class="r num-g">7</td>
+      <td><span class="num-g">6.6%</span></td><td class="r num-g">50.0%</td><td class="r">$1.43</td>
+      <td><span class="b b-green">🌟 爆款词</span></td>
+      <td>立即建精准活动单独投放！</td>
+    </tr>
+    <tr class="row-green">
+      <td>viscose pajamas</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r">$11.44</td><td class="r">8</td><td class="r">2</td>
+      <td><span class="num-g">14.6%</span></td><td class="r num-g">25.0%</td><td class="r">$1.43</td>
+      <td><span class="b b-green">✓ 高CVR</span></td>
+      <td>升精准词</td>
+    </tr>
+    <tr class="row-green">
+      <td>sleeveless pajamas for women</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r">$10.35</td><td class="r">8</td><td class="r">2</td>
+      <td><span class="num-g">11.3%</span></td><td class="r num-g">25.0%</td><td class="r">$1.29</td>
+      <td><span class="b b-green">✓ 良好</span></td>
+      <td>升精准词（注意Listing无袖款）</td>
+    </tr>
+    <tr class="row-red">
+      <td>bamboo pajamas / womens pajamas bamboo（并列）</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r num-r">$43.68</td><td class="r">24</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.82</td>
+      <td><span class="b b-red">❌ 黑洞词</span></td>
+      <td>否定这2个词</td>
+    </tr>
+    <tr class="row-red">
+      <td rowspan="3">broad-1（0单组）</td>
+      <td>womens bamboo pajamas set</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r num-r">$31.61</td><td class="r">18</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.76</td>
+      <td><span class="b b-red">❌ 立即停</span></td>
+      <td>整组暂停；此词否定</td>
+    </tr>
+    <tr class="row-red">
+      <td>cooling womens pajamas</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r num-r">$11.63</td><td class="r">8</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.45</td>
+      <td><span class="b b-red">❌ 停</span></td>
+      <td>整组暂停</td>
+    </tr>
+    <tr class="row-red">
+      <td>bamboo pajamas for women</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r num-r">$4.59</td><td class="r">3</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.53</td>
+      <td><span class="b b-red">❌ 停</span></td>
+      <td>整组暂停</td>
+    </tr>
+    <tr class="row-green">
+      <td>broad-2组</td>
+      <td>bamboo pajamas women set</td>
+      <td><span class="b b-yellow">广泛</span></td>
+      <td class="r num-g">$2.90</td><td class="r">2</td><td class="r num-g">3</td>
+      <td><span class="num-g">2.5%</span></td><td class="r num-g">150%</td><td class="r">$1.45</td>
+      <td><span class="b b-green">🌟 隐藏宝藏</span></td>
+      <td>立即加预算+升精准！</td>
+    </tr>
+
+    <!-- phrase系列 -->
+    <tr class="row-red">
+      <td class="mono" rowspan="5">PHRASE<br>-关键款</td>
+      <td rowspan="2">phrase（主组）<br>ACOS77%</td>
+      <td>bamboo capri pajamas</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-r">$8.68</td><td class="r">6</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.45</td>
+      <td><span class="b b-red">❌ 否定</span></td>
+      <td>否定词；降竞价40%</td>
+    </tr>
+    <tr class="row-red">
+      <td>sleeveless pajama sets / womens bamboo pajamas</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-r">$9.90</td><td class="r">7</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.41</td>
+      <td><span class="b b-red">❌ 否定</span></td>
+      <td>否定词</td>
+    </tr>
+    <tr class="row-red">
+      <td>phrase-2组</td>
+      <td>cool pajamas for women</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-r">$27.38</td><td class="r">17</td><td class="r">1</td>
+      <td><span class="num-r">59.5%</span></td><td class="r num-r">5.9%</td><td class="r">$1.61</td>
+      <td><span class="b b-red">⚠ 高ACOS</span></td>
+      <td>降竞价30%；关注CVR</td>
+    </tr>
+    <tr class="row-red">
+      <td>phrase-2组</td>
+      <td>sleeveless pajama set</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-r">$6.92</td><td class="r">6</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.15</td>
+      <td><span class="b b-red">❌ 否定</span></td>
+      <td>否定词</td>
+    </tr>
+    <tr class="row-green">
+      <td>phrase-3组</td>
+      <td>cooling pjs / womens summer pajamas</td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-g">$22.31</td><td class="r">18</td><td class="r">2</td>
+      <td><span class="num-g">24.8%</span></td><td class="r num-g">11.1%</td><td class="r">$1.24</td>
+      <td><span class="b b-green">✓ 达标</span></td>
+      <td>维持；挖出单词</td>
+    </tr>
+
+    <!-- 精准词 -->
+    <tr class="row-red">
+      <td class="mono" rowspan="5">精准<br>-T20</td>
+      <td rowspan="3">EXACE-2<br>（0单）</td>
+      <td>sleeveless pajama for women</td>
+      <td><span class="b b-purple">精准</span></td>
+      <td class="r num-r">$9.16</td><td class="r">6</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.53</td>
+      <td><span class="b b-red">❌ 停</span></td>
+      <td>暂停/删除此精准词</td>
+    </tr>
+    <tr class="row-red">
+      <td>sleeveless capri pajamas</td>
+      <td><span class="b b-purple">精准</span></td>
+      <td class="r num-r">$5.60</td><td class="r">4</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.40</td>
+      <td><span class="b b-red">❌ 停</span></td>
+      <td>暂停/删除</td>
+    </tr>
+    <tr class="row-yellow">
+      <td>cool pajamas for women</td>
+      <td><span class="b b-purple">精准</span></td>
+      <td class="r num-y">$3.42</td><td class="r">2</td><td class="r">1</td>
+      <td><span class="num-g">7.4%</span></td><td class="r num-g">50.0%</td><td class="r">$1.71</td>
+      <td><span class="b b-green">✓ 出单</span></td>
+      <td>保留；加大出价</td>
+    </tr>
+    <tr class="row-green">
+      <td rowspan="2">exact-已优化</td>
+      <td>tank top capri pajama set for women</td>
+      <td><span class="b b-purple">精准</span></td>
+      <td class="r num-g">$3.04</td><td class="r">2</td><td class="r">1</td>
+      <td><span class="num-g">7.0%</span></td><td class="r num-g">50.0%</td><td class="r">$1.52</td>
+      <td><span class="b b-green">✓ 出单</span></td>
+      <td>保留；可加预算</td>
+    </tr>
+    <tr class="row-red">
+      <td>sleeveless pajamas / ladies sleeveless pajamas</td>
+      <td><span class="b b-purple">精准</span></td>
+      <td class="r num-r">$6.15</td><td class="r">5</td><td class="r num-r">0</td>
+      <td><span class="num-r">N/A</span></td><td class="r num-r">0%</td><td class="r">$1.23</td>
+      <td><span class="b b-red">❌ 停</span></td>
+      <td>Listing无无袖款→删除</td>
+    </tr>
+
+    <!-- G3836059 -->
+    <tr class="row-red">
+      <td class="mono" rowspan="2">G3836059<br>-七分裤</td>
+      <td rowspan="2">G3836059-PHRASE</td>
+      <td>culottes for women <span class="b b-red">⚠高风险</span></td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-r">$39.10</td><td class="r">144</td><td class="r">2</td>
+      <td><span class="num-r">76.2%</span></td><td class="r num-r">1.4%</td><td class="r">$0.27</td>
+      <td><span class="b b-red">🚨 极高ACOS</span></td>
+      <td>竞价降50%（或组内否定）</td>
+    </tr>
+    <tr class="row-green">
+      <td>capri pants for women <span class="b b-green">⭐明星</span></td>
+      <td><span class="b b-blue">词组</span></td>
+      <td class="r num-g">$20.54</td><td class="r">70</td><td class="r num-g">7</td>
+      <td><span class="num-g">11.8%</span></td><td class="r num-g">10.0%</td><td class="r">$0.29</td>
+      <td><span class="b b-green">🌟 明星词</span></td>
+      <td>升精准词；竞价可提20%</td>
+    </tr>
+
+    <!-- G3829133 AT -->
+    <tr class="row-yellow">
+      <td class="mono" rowspan="2">G3829133<br>-AT-女背七</td>
+      <td rowspan="2">G3829133-at</td>
+      <td>close-match（近似）</td>
+      <td><span class="b b-blue">自动-近似</span></td>
+      <td class="r num-y">$54.33</td><td class="r">75</td><td class="r">5</td>
+      <td><span class="num-g">27.2%</span></td><td class="r">6.7%</td><td class="r">$0.72</td>
+      <td><span class="b b-yellow">⚠ 偏高</span></td>
+      <td>close-match竞价降15%</td>
+    </tr>
+    <tr>
+      <td>substitutes（替代品）</td>
+      <td><span class="b b-blue">自动-替代</span></td>
+      <td class="r num-r">$0.00</td><td class="r">0</td><td class="r num-r">0</td>
+      <td>—</td><td>—</td><td>—</td>
+      <td><span class="b b-yellow">⚠ 未跑量</span></td>
+      <td>提高substitutes竞价争量</td>
+    </tr>
+
+    <!-- menopause -->
+    <tr class="row-green">
+      <td class="mono">menopause<br>-精准</td>
+      <td>menopause-exact-关键词组</td>
+      <td>keyword-group（相关产品类目词组）</td>
+      <td><span class="b b-blue">关键词组</span></td>
+      <td class="r num-g">$24.00</td><td class="r">27</td><td class="r num-g">3</td>
+      <td><span class="num-g">15.4%</span></td><td class="r num-g">11.1%</td><td class="r">$0.89</td>
+      <td><span class="b b-green">✓ 良好</span></td>
+      <td>可加预算；挖具体词转精准</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+<!-- ====== TABLE 3: 精准词健康诊断 ====== -->
+<div class="sec-hd"><span class="num">3</span><h2>精准词（EXACT）全量健康诊断</h2><small>—— 精准占比3.1%的根因分析</small></div>
+
+<div class="alert a-red">
+  <span>🔴</span>
+  <span><strong>致命问题：全账户精准词仅12条，其中10条花费$0或0转化，sleeveless系列6条精准词全军覆没，累计浪费$26.7。</strong>
+  根本原因：精准活动选词方向错误，大量投sleeveless类词，但当前主推SKU可能没有无袖款，造成点击进来却不购买。</span>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>广告组</th><th>精准投放词</th><th>花费</th><th>点击</th><th>订单</th><th>ACOS</th><th>CVR</th><th>CPC</th><th>问题类型</th><th>处理方案</th>
+  </tr></thead>
+  <tbody>
+    <tr class="row-green"><td>EXACE-2-长尾acos</td><td>cool pajamas for women</td><td class="r num-g">$3.42</td><td class="r">2</td><td class="r num-g">1</td><td class="num-g">7.4%</td><td class="r num-g">50%</td><td class="r">$1.71</td><td><span class="b b-green">✓ 出单</span></td><td style="color:#86efac">保留；提高竞价10%</td></tr>
+    <tr class="row-green"><td>exact-已优化</td><td>tank top capri pajama set for women</td><td class="r num-g">$3.04</td><td class="r">2</td><td class="r num-g">1</td><td class="num-g">7.0%</td><td class="r num-g">50%</td><td class="r">$1.52</td><td><span class="b b-green">✓ 出单</span></td><td style="color:#86efac">保留；可加量</td></tr>
+    <tr class="row-red"><td>EXACE-2-长尾acos</td><td>sleeveless pajama for women</td><td class="r num-r">$9.16</td><td class="r">6</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.53</td><td><span class="b b-red">选词错误</span></td><td style="color:#fca5a5">立即删除/暂停</td></tr>
+    <tr class="row-red"><td>EXACE-2-长尾acos</td><td>sleeveless capri pajamas</td><td class="r num-r">$5.60</td><td class="r">4</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.40</td><td><span class="b b-red">选词错误</span></td><td style="color:#fca5a5">立即删除/暂停</td></tr>
+    <tr class="row-red"><td>exact-已优化</td><td>sleeveless pajamas</td><td class="r num-r">$4.46</td><td class="r">4</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.12</td><td><span class="b b-red">选词错误</span></td><td style="color:#fca5a5">立即删除/暂停</td></tr>
+    <tr class="row-red"><td>EXACE-2-长尾acos</td><td>ladies summer pajamas</td><td class="r num-r">$4.26</td><td class="r">3</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.42</td><td><span class="b b-red">转化差</span></td><td style="color:#fca5a5">暂停；换词</td></tr>
+    <tr class="row-red"><td>EXACE-2-长尾acos</td><td>womens pajama sets capri length</td><td class="r num-r">$3.29</td><td class="r">2</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.64</td><td><span class="b b-red">转化差</span></td><td style="color:#fca5a5">暂停</td></tr>
+    <tr class="row-red"><td>exact-已优化</td><td>cooling pajamas for night sweats</td><td class="r num-r">$1.69</td><td class="r">1</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.69</td><td><span class="b b-yellow">数据不足</span></td><td style="color:#fcd34d">继续观察</td></tr>
+    <tr class="row-red"><td>exact-已优化</td><td>ladies sleeveless pajamas</td><td class="r num-r">$1.69</td><td class="r">1</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.69</td><td><span class="b b-red">选词错误</span></td><td style="color:#fca5a5">暂停</td></tr>
+    <tr class="row-red"><td>exact-已优化</td><td>women's capri pajama bottoms</td><td class="r num-r">$1.56</td><td class="r">1</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.56</td><td><span class="b b-yellow">数据不足</span></td><td style="color:#fcd34d">观察至5次点击</td></tr>
+    <tr class="row-red"><td>EXACE-2-长尾acos</td><td>womens pajamas sleeveless</td><td class="r num-r">$1.53</td><td class="r">1</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.53</td><td><span class="b b-red">选词错误</span></td><td style="color:#fca5a5">暂停</td></tr>
+    <tr class="row-red"><td>exact-已优化</td><td>bamboo pajamas womens</td><td class="r num-r">$1.35</td><td class="r">1</td><td class="r num-r">0</td><td class="num-r">N/A</td><td class="r num-r">0%</td><td class="r">$1.35</td><td><span class="b b-yellow">数据不足</span></td><td style="color:#fcd34d">观察至5次点击</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="alert a-blue">
+  <span>💡</span>
+  <span><strong>精准词重建方向：</strong>当前精准词全部围绕sleeveless（无袖）和长尾词选词，但sleeveless与Listing不符导致0转化。建议重建精准词库，
+  聚焦以下已验证出单词：<br>
+  <strong>第一优先级（立即建精准）：</strong>"bamboo pajama for women"(CVR21%)、"cooling pajamas"(CVR50%)、"capri pants for women"(CVR10%)、"bamboo+pjs"(CVR33%)、"bamboo capri pajamas"(CVR12%)<br>
+  <strong>第二优先级：</strong>"viscose pajamas"(CVR25%)、"bamboo pjs for women"(CVR25%)、"sleeveless pajamas for women"（需确认Listing有无袖款后再投）</span>
+</div>
+
+
+<!-- ====== TABLE 4: 高价值词升精准计划 ====== -->
+<div class="sec-hd"><span class="num">4</span><h2>高价值词升精准计划</h2><small>—— 提升精准占比至25%+的核心词库</small></div>
+<div class="sub-lbl">以下词均来自搜索词报告+投放词报告交叉验证，两份数据共同确认CVR≥10%且ACOS&lt;30%</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>投放词</th><th>来源活动/组</th><th>当前类型</th><th>当前花费</th><th>当前订单</th><th>ACOS</th><th>CVR</th><th>升精准后<br>建议出价</th><th>优先级</th><th>预期月增订单</th>
+  </tr></thead>
+  <tbody>
+    <tr class="row-green"><td><strong>cooling pajamas</strong></td><td>31129042-MT-广泛-BROAD</td><td><span class="b b-yellow">广泛</span></td><td class="r">$20.03</td><td class="r num-g">7</td><td class="num-g">6.6%</td><td class="r num-g">50.0%</td><td>$1.50-1.70</td><td><span class="b b-red">P0 最高</span></td><td>+15-20单</td></tr>
+    <tr class="row-green"><td><strong>bamboo pajama for women</strong></td><td>bamboo-phrase组</td><td><span class="b b-blue">词组</span></td><td class="r">$56.14</td><td class="r num-g">7</td><td class="num-g">18.0%</td><td class="r num-g">20.6%</td><td>$1.60-1.80</td><td><span class="b b-red">P0 最高</span></td><td>+12-18单</td></tr>
+    <tr class="row-green"><td><strong>capri pants for women</strong></td><td>G3836059-PHRASE</td><td><span class="b b-blue">词组</span></td><td class="r">$20.54</td><td class="r num-g">7</td><td class="num-g">11.8%</td><td class="r num-g">10.0%</td><td>$0.32-0.40</td><td><span class="b b-red">P0 最高</span></td><td>+10-15单</td></tr>
+    <tr class="row-green"><td><strong>bamboo pajamas women set</strong></td><td>broad-2组</td><td><span class="b b-yellow">广泛</span></td><td class="r">$2.90</td><td class="r num-g">3</td><td class="num-g">2.5%</td><td class="r num-g">150%</td><td>$1.40-1.60</td><td><span class="b b-red">P0 最高</span></td><td>+20-30单</td></tr>
+    <tr class="row-green"><td><strong>bamboo capri pajamas</strong></td><td>bamboo-broad-大词组</td><td><span class="b b-yellow">广泛</span></td><td class="r">$24.28</td><td class="r num-g">2</td><td class="num-g">28.8%</td><td class="r num-g">11.8%</td><td>$1.40-1.60</td><td><span class="b b-yellow">P1</span></td><td>+5-8单</td></tr>
+    <tr class="row-green"><td><strong>bamboo+pjs</strong></td><td>bamboo-phrase组</td><td><span class="b b-blue">词组</span></td><td class="r">$9.08</td><td class="r num-g">2</td><td class="num-g">12.8%</td><td class="r num-g">33.3%</td><td>$1.50-1.65</td><td><span class="b b-yellow">P1</span></td><td>+5-8单</td></tr>
+    <tr class="row-green"><td><strong>viscose pajamas</strong></td><td>BROAD组</td><td><span class="b b-yellow">广泛</span></td><td class="r">$11.44</td><td class="r num-g">2</td><td class="num-g">14.6%</td><td class="r num-g">25.0%</td><td>$1.40-1.55</td><td><span class="b b-yellow">P1</span></td><td>+4-6单</td></tr>
+    <tr class="row-green"><td><strong>sleeveless pajamas for women</strong></td><td>BROAD组</td><td><span class="b b-yellow">广泛</span></td><td class="r">$10.35</td><td class="r num-g">2</td><td class="num-g">11.3%</td><td class="r num-g">25.0%</td><td>$1.25-1.40</td><td><span class="b b-yellow">P1（确认有无袖款）</span></td><td>+4-6单</td></tr>
+    <tr class="row-green"><td><strong>bamboo pjs for women</strong></td><td>bamboo-broad-大词</td><td><span class="b b-yellow">广泛</span></td><td class="r">$11.35</td><td class="r num-g">2</td><td class="num-g">13.1%</td><td class="r num-g">25.0%</td><td>$1.40-1.55</td><td><span class="b b-yellow">P1</span></td><td>+4-6单</td></tr>
+    <tr class="row-green"><td><strong>bamboo+pajamas（词组）</strong></td><td>bamboo-phrase组</td><td><span class="b b-blue">词组</span></td><td class="r">$31.09</td><td class="r num-g">3</td><td class="num-g">22.5%</td><td class="r num-g">14.3%</td><td>$1.45-1.60</td><td><span class="b b-yellow">P1</span></td><td>+4-6单</td></tr>
+    <tr class="row-green"><td><strong>cooling pjs</strong></td><td>phrase-3组</td><td><span class="b b-blue">词组</span></td><td class="r">$11.64</td><td class="r num-g">1</td><td class="num-g">25.9%</td><td class="r num-g">12.5%</td><td>$1.40-1.55</td><td><span class="b b-yellow">P2</span></td><td>+2-4单</td></tr>
+    <tr class="row-green"><td><strong>womens summer pajamas</strong></td><td>BROAD/phrase-3组</td><td><span class="b b-yellow">广泛</span></td><td class="r">$20.39</td><td class="r num-g">2</td><td class="num-g">23.1%</td><td class="r num-g">11.1%</td><td>$1.10-1.25</td><td><span class="b b-yellow">P2</span></td><td>+3-5单</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="alert a-green">
+  <span>📈</span>
+  <span><strong>升精准预期收益：</strong>以上12个词如全部建立精准活动，预计每周增加40-60单，精准词花费占比从3.1%提升至25-30%，整体ACOS可压降至22-24%，同时减少与自动/广泛活动的内耗竞价。</span>
+</div>
+
+
+<!-- ====== TABLE 5: 综合优先级行动表 ====== -->
+<div class="sec-hd"><span class="num">5</span><h2>综合优先级行动表</h2><small>—— 精准到广告组的一键执行清单</small></div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>优先级</th><th>执行时限</th><th>广告活动</th><th>广告组</th><th>具体动作</th><th>涉及词</th><th>节省/增益预估</th>
+  </tr></thead>
+  <tbody>
+    <tr class="row-red"><td><span class="b b-red">🚨 P0</span></td><td>今日</td><td class="mono">31129042-MT-广泛-class1</td><td>31129042-broad-1</td><td>整组暂停</td><td>womens bamboo pajamas set等全部</td><td>止血$64/周</td></tr>
+    <tr class="row-red"><td><span class="b b-red">🚨 P0</span></td><td>今日</td><td class="mono">31129042-at（自动）</td><td>AT-女背七-关键款</td><td>close-match竞价降25%</td><td>close-match流量整体</td><td>节省$20-25/周；ACOS降至24-26%</td></tr>
+    <tr class="row-red"><td><span class="b b-red">🚨 P0</span></td><td>今日</td><td class="mono">31129042-MT-精准-T20</td><td>EXACE-2-长尾acos</td><td>删除/暂停5条sleeveless精准词</td><td>sleeveless全系列精准词</td><td>止血$24/周</td></tr>
+    <tr class="row-red"><td><span class="b b-red">🚨 P0</span></td><td>今日</td><td class="mono">G3836059-MT-七分裤</td><td>G3836059-PHRASE</td><td>culottes for women竞价降50%</td><td>culottes for women</td><td>释放$20/周至capri pants</td></tr>
+    <tr class="row-red"><td><span class="b b-red">🚨 P0</span></td><td>今日</td><td class="mono">G3836015/G3929057下架</td><td>全部广告组</td><td>整活动暂停</td><td>全部</td><td>止血$34/周</td></tr>
+    <tr class="row-yellow"><td><span class="b b-yellow">⚡ P1</span></td><td>本周内</td><td class="mono">新建精准活动</td><td>新建-精准核心词</td><td>建精准活动投放top4词</td><td>cooling pajamas / bamboo pajama for women / capri pants for women / bamboo pajamas women set</td><td>预计+15-20单/周</td></tr>
+    <tr class="row-yellow"><td><span class="b b-yellow">⚡ P1</span></td><td>本周内</td><td class="mono">31129042-MT-PHRASE主词组</td><td>31129042-phrase（主）</td><td>竞价降40%；否定4词</td><td>bamboo capri pajamas / sleeveless pajama sets / womens bamboo pajamas / bamboo capri pajamas</td><td>ACOS从71%→30%以下</td></tr>
+    <tr class="row-yellow"><td><span class="b b-yellow">⚡ P1</span></td><td>本周内</td><td class="mono">31129042-MT-广泛-class1</td><td>31129042-BROAD</td><td>否定2词（bamboo pajamas+womens pajamas bamboo）</td><td>bamboo pajamas / womens pajamas bamboo</td><td>节省$40/周无效花费</td></tr>
+    <tr class="row-yellow"><td><span class="b b-yellow">⚡ P1</span></td><td>本周内</td><td class="mono">bamboo-女背七-关键款</td><td>主颜色-bamboo-phrase</td><td>否定3词</td><td>women's bamboo pajamas set / bamboo sleepwear women / bamboo sleepwear</td><td>节省$27/周</td></tr>
+    <tr class="row-yellow"><td><span class="b b-yellow">⚡ P1</span></td><td>本周内</td><td class="mono">G3829133-AT-女背七</td><td>G3829133-at</td><td>close-match竞价降15%<br>substitutes竞价提10%</td><td>close-match整体</td><td>ACOS从27.2%→22%</td></tr>
+    <tr class="row-yellow"><td><span class="b b-yellow">⚡ P1</span></td><td>本周内</td><td class="mono">G3913133-AT-短袖睡裙</td><td>G3913133-at</td><td>暂停 + 检查Listing</td><td>substitutes全部</td><td>止血$18/周</td></tr>
+    <tr><td><span class="b b-blue">📌 P2</span></td><td>下周</td><td class="mono">menopause-精准活动</td><td>menopause-exact-关键词组</td><td>提高keyword-group竞价20%<br>从关键词组挖具体词做精准</td><td>keyword-group定向</td><td>预计+2-3单/周</td></tr>
+    <tr><td><span class="b b-blue">📌 P2</span></td><td>下周</td><td class="mono">新建精准活动（第二批）</td><td>新建-精准扩充词</td><td>建精准活动投放8个P1/P2词</td><td>bamboo capri pajamas / viscose pajamas / bamboo pjs / bamboo+pjs等</td><td>精准占比提升至25%+</td></tr>
+    <tr><td><span class="b b-blue">📌 P2</span></td><td>下周</td><td class="mono">31129042-at（自动）</td><td>AT-女背七-关键款</td><td>keyword-group竞价提升30%<br>（目前8.8%占比，应扩大至20%）</td><td>keyword-group流量</td><td>ACOS可降至20%以内</td></tr>
+    <tr><td><span class="b b-blue">📌 P2</span></td><td>下周</td><td class="mono">G3920443-at吊带短裤</td><td>G3920443</td><td>预算提升30%；substitutes竞价提15%</td><td>substitutes流量（ACOS11.2%，CVR15.4%）</td><td>+5-8单/周</td></tr>
+  </tbody>
+</table>
+</div>
+
+
+<!-- ====== TABLE 6: 新旧报告交叉印证差异表 ====== -->
+<div class="sec-hd"><span class="num">6</span><h2>搜索词报告 × 投放词报告交叉印证</h2><small>—— 两份报告不一致点与新增洞察</small></div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr>
+    <th>维度</th><th>搜索词报告结论</th><th>投放词报告新发现</th><th>交叉印证结论</th><th>调整建议变化</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>31129042-at<br>自动活动</strong></td>
+      <td>ACOS 23.4%，整体达标，21单</td>
+      <td>内部拆分：substitutes ACOS 18.1%✓ / close-match ACOS 38.3%❌</td>
+      <td><span class="b b-red">更悲观</span> — 自动ACOS看似达标，实际close-match正在拖累</td>
+      <td>新增：单独压低close-match竞价</td>
+    </tr>
+    <tr>
+      <td><strong>G3836059<br>七分裤活动</strong></td>
+      <td>ACOS 26.5%，问题词culottes需处理</td>
+      <td>culottes：144点击，ACOS 76.2%，CVR仅1.4%；capri pants：70点击，ACOS 11.8%，CVR 10%</td>
+      <td><span class="b b-red">更严峻</span> — 两词差距极大，culottes消耗了整组64%预算</td>
+      <td>更紧迫：culottes必须立即降竞价50%</td>
+    </tr>
+    <tr>
+      <td><strong>精准词表现</strong></td>
+      <td>精准花费$37，CVR 3.8%（低于8%）</td>
+      <td>12条精准词，10条为sleeveless系列（全0转化），仅2条出单词</td>
+      <td><span class="b b-red">根因确认</span> — 选词方向完全错误，sleeveless与Listing不匹配</td>
+      <td>全部删除sleeveless精准词，重建词库</td>
+    </tr>
+    <tr>
+      <td><strong>broad-1组（0单）</strong></td>
+      <td>花费$64，0单，建议暂停</td>
+      <td>3个主词（womens bamboo pajamas set $31.6 / cooling womens pajamas $11.6 / bamboo pajamas for women $4.6）全部0单</td>
+      <td><span class="b b-red">确认</span> — 三词各有大量花费均0转化，非随机波动</td>
+      <td>确认立即暂停</td>
+    </tr>
+    <tr>
+      <td><strong>bamboo-broad-大词组</strong></td>
+      <td>ACOS 26.3%，8单，较好</td>
+      <td>bamboo+pajamas词ACOS 41.5%，但bamboo capri pajamas ACOS 28.8%；还有bamboo lounge set CVR50%出现</td>
+      <td><span class="b b-yellow">分化</span> — 组内词分化明显，大词表现差，长尾词好</td>
+      <td>大词降竞价；长尾词升精准</td>
+    </tr>
+    <tr>
+      <td><strong>menopause精准活动</strong></td>
+      <td>ACOS 15.4%，3单，良好</td>
+      <td>100%来自keyword-group定向，非具体关键词</td>
+      <td><span class="b b-blue">新洞察</span> — keyword-group是最佳流量池（ACOS13.5%，CVR13.5%）</td>
+      <td>全面提高keyword-group竞价；挖出具体词做精准</td>
+    </tr>
+    <tr>
+      <td><strong>G3829133-AT</strong></td>
+      <td>ACOS 29.3%，5单，CVR 6.2%偏低</td>
+      <td>100%来自close-match，substitutes完全没跑量</td>
+      <td><span class="b b-red">结构失衡</span> — 整组只有近似流量，没有替代品流量，竞价设置有问题</td>
+      <td>提高substitutes竞价，降低close-match竞价</td>
+    </tr>
+    <tr>
+      <td><strong>BROAD组ACOS17.4%</strong></td>
+      <td>广泛BROAD组ACOS 17.4%，CVR 19.7%，表现最好</td>
+      <td>核心词：cooling pajamas CVR50%，ACOS6.6%；viscose pajamas CVR25%；但bamboo pajamas/womens pajamas bamboo 0转化$43</td>
+      <td><span class="b b-yellow">内部分化</span> — 好词极好（cooling pajamas是爆款），坏词极差</td>
+      <td>立即否定bamboo pajamas等无效词；cooling pajamas紧急升精准</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 总结 -->
+<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px 22px;margin-top:24px">
+  <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px">🎯 两周执行后量化目标</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+    <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:7px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:4px">整体ACOS</div>
+      <div style="font-size:17px;font-weight:700;color:var(--green)">22–24%</div>
+      <div style="font-size:10px;color:var(--text2)">当前27.5%</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:7px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:4px">精准词占比</div>
+      <div style="font-size:17px;font-weight:700;color:var(--blue)">≥25%</div>
+      <div style="font-size:10px;color:var(--text2)">当前3.1%</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:7px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:4px">自动ACOS</div>
+      <div style="font-size:17px;font-weight:700;color:var(--green)">≤24%</div>
+      <div style="font-size:10px;color:var(--text2)">当前27.5%（混合）</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:7px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:4px">节省无效花费</div>
+      <div style="font-size:17px;font-weight:700;color:var(--green)">$200+/周</div>
+      <div style="font-size:10px;color:var(--text2)">当前浪费~$250</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:7px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:4px">周订单量</div>
+      <div style="font-size:17px;font-weight:700;color:var(--cyan)">150–170单</div>
+      <div style="font-size:10px;color:var(--text2)">当前125单</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:11px;color:var(--text2);border-top:1px solid var(--border);padding-top:10px">
+    数据来源：商品推广_搜索词_报告1420.xlsx（813条）× 商品推广_投放_报告1420.xlsx（576条）交叉分析 ｜ 宋慧广告组合 ｜ 2026-05-14~05-20
+  </div>
+</div>
+
+</div>
+</body>
+</html>
